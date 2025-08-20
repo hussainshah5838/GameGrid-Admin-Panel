@@ -53,7 +53,7 @@ const PaymentsTable = () => {
   };
 
   return (
-    <div className="rounded-2xl bg-white shadow-sm ring-1 ring-gray-200 overflow-hidden">
+    <div className="rounded-2xl mt-4 bg-white shadow-sm ring-1 ring-gray-200 overflow-hidden">
       {/* Toolbar */}
       <div className="rounded-2xl bg-[#7C5AC2] px-3 sm:px-4 py-2.5 flex items-center">
         <div className="flex items-center gap-5 text-white/95">

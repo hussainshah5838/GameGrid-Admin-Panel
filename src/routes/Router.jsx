@@ -9,7 +9,6 @@ import UsersPage from "../Pages/UsersPage";
 import Stores from "../Pages/Stores";
 import ShipmentsPage from "../Pages/ShipmentsPage";
 import PaymentsPage from "../Pages/PaymentPage";
-import SettingsPage from "../Pages/Settings";
 import LoginPage from "../Pages/Auth/Login";
 import ProfilePage from "../Pages/ProfilePage";
 import MessagesPage from "../Pages/MessagesPage";
@@ -38,10 +37,6 @@ const Router = createBrowserRouter([
       {
         path: "payments",
         element: <PaymentsPage />,
-      },
-      {
-        path: "settings",
-        element: <SettingsPage />,
       },
       { path: "profile/*", element: <ProfilePage /> },
       { path: "messages/*", element: <MessagesPage /> },

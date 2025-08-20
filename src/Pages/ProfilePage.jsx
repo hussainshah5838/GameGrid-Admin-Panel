@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useMemo,
+  useRef,
+  useEffect,
+  useState,
+} from "react";
 import { Routes, Route, useNavigate, Link } from "react-router-dom";
 import {
   FiChevronRight,
@@ -18,7 +25,9 @@ import {
    Tiny UI kit (DRY)
 ----------------------------------------------------------------------------- */
 const Card = ({ className = "", children }) => (
-  <div className={`bg-white rounded-2xl border border-gray-200 shadow-sm ${className}`}>
+  <div
+    className={`bg-white rounded-2xl border border-gray-200 shadow-sm ${className}`}
+  >
     {children}
   </div>
 );
@@ -47,16 +56,26 @@ const Input = React.forwardRef(function Input(
 ) {
   return (
     <label className="block">
-      {label && <span className="block mb-1 text-[13px] text-gray-600">{label}</span>}
+      {label && (
+        <span className="block mb-1 text-[13px] text-gray-600">{label}</span>
+      )}
       <div className="relative">
-        {left && <span className="absolute inset-y-0 left-3 grid place-items-center">{left}</span>}
+        {left && (
+          <span className="absolute inset-y-0 left-3 grid place-items-center">
+            {left}
+          </span>
+        )}
         <input
           ref={ref}
           {...rest}
           className={`w-full h-11 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#7C5AC2]/60 focus:border-transparent
           ${left ? "pl-10" : "pl-3"} ${right ? "pr-10" : "pr-3"} ${className}`}
         />
-        {right && <span className="absolute inset-y-0 right-3 grid place-items-center">{right}</span>}
+        {right && (
+          <span className="absolute inset-y-0 right-3 grid place-items-center">
+            {right}
+          </span>
+        )}
       </div>
     </label>
   );
@@ -88,7 +107,10 @@ const Modal = ({ open, onClose, title, children, wide = false }) => {
         <Card className="p-5">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-[#7C5AC2]">{title}</h3>
-            <button onClick={onClose} className="p-2 rounded-lg hover:bg-gray-100">
+            <button
+              onClick={onClose}
+              className="p-2 rounded-lg hover:bg-gray-100"
+            >
               <FiX />
             </button>
           </div>
@@ -120,7 +142,10 @@ const ProfileProvider = ({ children }) => {
   });
 
   const updateProfile = (patch) => setProfile((p) => ({ ...p, ...patch }));
-  const value = useMemo(() => ({ profile, updateProfile, noti, setNoti }), [profile, noti]);
+  const value = useMemo(
+    () => ({ profile, updateProfile, noti, setNoti }),
+    [profile, noti]
+  );
 
   return <ProfileCtx.Provider value={value}>{children}</ProfileCtx.Provider>;
 };
@@ -131,18 +156,22 @@ const ProfileProvider = ({ children }) => {
 const HeaderCard = ({ ctaText, onCta }) => {
   const { profile } = useProfile();
   return (
-    <div className="bg-[#7C5AC2] text-white rounded-2xl p-4 sm:p-5 flex items-center justify-between">
+    <div className="rounded-2xl p-5 bg-white/90 shadow-md sm:p-5 flex items-center justify-between">
       <div className="flex items-center gap-3">
-        <img src={profile.avatar} alt={profile.name} className="w-10 h-10 rounded-full object-cover" />
+        <img
+          src={profile.avatar}
+          alt={profile.name}
+          className="w-10 h-10 rounded-full object-cover"
+        />
         <div>
           <div className="font-semibold">{profile.name}</div>
-          <div className="text-white/90 text-sm">{profile.email}</div>
+          <div className="text-sm">{profile.email}</div>
         </div>
       </div>
       {ctaText && (
         <button
           onClick={onCta}
-          className="h-9 px-3 rounded-lg bg-white text-[#7C5AC2] font-medium hover:bg-white/90"
+          className="h-10 px-5 rounded-lg bg-[#ea1e7c] text-white font-medium hover:bg-[#ea1e7c]/90"
         >
           {ctaText}
         </button>
@@ -160,7 +189,10 @@ const ProfileHub = () => {
 
   return (
     <div className="space-y-4">
-      <HeaderCard ctaText="Change Profile Settings" onCta={() => nav("details")} />
+      <HeaderCard
+        ctaText="Change Profile Settings"
+        onCta={() => nav("details")}
+      />
 
       <Card className="p-3 sm:p-4">
         <div className="divide-y divide-gray-200">
@@ -174,10 +206,14 @@ const ProfileHub = () => {
 
           {/* Notifications block (title row, then options) */}
           <div className="flex items-start gap-3 py-4">
-            <IconBox><FiBell /></IconBox>
+            <IconBox>
+              <FiBell />
+            </IconBox>
             <div className="flex-1">
               <div className="text-gray-900 font-semibold">Notifications</div>
-              <div className="text-gray-400 text-[12px]">Allow notifications for an activity</div>
+              <div className="text-gray-400 text-[12px]">
+                Allow notifications for an activity
+              </div>
 
               <div className="mt-4 space-y-4">
                 <ToggleRow
@@ -205,7 +241,9 @@ const ProfileHub = () => {
             icon={<FiFlag />}
             title="Report"
             subtitle="Flags, technical issues"
-            onClick={() => {/* open a report modal later */}}
+            onClick={() => {
+              /* open a report modal later */
+            }}
           />
 
           {/* Logout */}
@@ -258,10 +296,7 @@ const ProfileDetails = () => {
 
   return (
     <div className="space-y-4">
-      <HeaderCard
-        ctaText="Edit Profile"
-        onCta={() => setOpen(true)}
-      />
+      <HeaderCard ctaText="Edit Profile" onCta={() => setOpen(true)} />
 
       <Card className="p-3 sm:p-4">
         <RowKV label="Username" value={profile.name} />
@@ -290,36 +325,128 @@ const RowKV = ({ label, value }) => (
 );
 
 const EditProfileModal = ({ open, onClose, profile, onSave }) => {
-  const [name, setName] = useState(profile.name);
-  const [email, setEmail] = useState(profile.email);
-  const [phone, setPhone] = useState(profile.phone);
+  const [name, setName] = useState(profile?.name || "");
+  const [email, setEmail] = useState(profile?.email || "");
+  const [phone, setPhone] = useState(profile?.phone || "");
+  const [avatar, setAvatar] = useState(profile?.avatar || "");
+  const fileRef = useRef(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (open) {
-      setName(profile.name);
-      setEmail(profile.email);
-      setPhone(profile.phone);
+      setName(profile?.name || "");
+      setEmail(profile?.email || "");
+      setPhone(profile?.phone || "");
+      setAvatar(profile?.avatar || "");
     }
   }, [open, profile]);
 
+  const triggerFile = () => fileRef.current?.click();
+  const onPickFile = (e) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    const url = URL.createObjectURL(f);
+    setAvatar(url);
+    // If you need to persist file, pass it in onSave below.
+  };
+
+  const handleSave = () => onSave({ name, email, phone, avatar });
+
   return (
-    <Modal open={open} onClose={onClose} title="Edit Profile" wide>
-      <div className="flex flex-col items-center">
-        <img src={profile.avatar} alt="avatar" className="w-16 h-16 rounded-full object-cover" />
-        <button className="text-[#7C5AC2] text-sm mt-2 hover:underline">
+    <Modal open={open} onClose={onClose}>
+      {/* Header */}
+      <div className="flex items-start justify-between">
+        <div>
+          <h2 className="text-xl font-semibold text-gray-900">Edit Profile</h2>
+          <p className="text-sm text-gray-500 mt-1">
+            Change your profile settings
+          </p>
+        </div>
+      </div>
+
+      {/* Avatar */}
+      <div className="mt-6 flex flex-col items-center">
+        <img
+          src={avatar}
+          alt="avatar"
+          className="w-20 h-20 rounded-full object-cover ring-2 ring-white shadow"
+        />
+        <button
+          type="button"
+          onClick={triggerFile}
+          className="text-[#7C5AC2] text-sm mt-3 hover:underline"
+        >
           Change Profile Picture
         </button>
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={onPickFile}
+        />
       </div>
 
-      <div className="mt-4 space-y-3">
-        <Input label="Username" value={name} onChange={(e) => setName(e.target.value)} left={<FiUser className="text-gray-400" />} />
-        <Input label="Email" value={email} onChange={(e) => setEmail(e.target.value)} left={<FiMail className="text-gray-400" />} />
-        <Input label="Phone Number" value={phone} onChange={(e) => setPhone(e.target.value)} left={<FiPhone className="text-gray-400" />} />
+      {/* Form */}
+      <div className="mt-6 space-y-4">
+        {/* Username (active w/ purple focus like screenshot) */}
+        <div className="space-y-1.5">
+          <label className="text-sm text-gray-700">Username</label>
+          <div className="relative">
+            <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full pl-10 pr-3 py-2.5 rounded-xl bg-white border border-[#7C5AC2]/40 focus:outline-none focus:ring-2 focus:ring-[#7C5AC2] focus:border-[#7C5AC2] transition"
+              placeholder="John Doe"
+            />
+          </div>
+        </div>
+
+        {/* Email (disabled, grey like screenshot) */}
+        <div className="space-y-1.5">
+          <label className="text-sm text-gray-700">Email</label>
+          <div className="relative">
+            <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              value={email}
+              disabled
+              className="w-full pl-10 pr-3 py-2.5 rounded-xl bg-gray-100 text-gray-500 border border-gray-200"
+              placeholder="example@email.com"
+              readOnly
+            />
+          </div>
+        </div>
+
+        {/* Phone (disabled, grey like screenshot) */}
+        <div className="space-y-1.5">
+          <label className="text-sm text-gray-700">Phone Number</label>
+          <div className="relative">
+            <FiPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              value={phone}
+              disabled
+              className="w-full pl-10 pr-3 py-2.5 rounded-xl bg-gray-100 text-gray-500 border border-gray-200"
+              placeholder="(+1) 000 0000 000"
+              readOnly
+            />
+          </div>
+        </div>
       </div>
 
-      <div className="mt-5 flex gap-3">
-        <Button className="flex-1" onClick={() => onSave({ name, email, phone })}>Save</Button>
-        <GhostButton className="flex-1" onClick={onClose}>Cancel</GhostButton>
+      {/* Actions */}
+      <div className="mt-7 flex flex-col gap-3">
+        <button
+          onClick={handleSave}
+          className="flex-1 py-4 rounded-xl bg-[#7C5AC2] text-white font-medium hover:opacity-95 active:opacity-90 transition"
+        >
+          Save
+        </button>
+        <button
+          onClick={onClose}
+          className="flex-1 py-4 rounded-xl border border-gray-300 bg-white text-gray-700 font-medium hover:bg-gray-50"
+        >
+          Cancel
+        </button>
       </div>
     </Modal>
   );
@@ -338,7 +465,9 @@ const AccountSettings = () => {
     <div className="space-y-4">
       {/* simple breadcrumb like your header bar does; optional link back */}
       <div className="text-sm text-gray-400">
-        <Link to="/profile" className="hover:underline text-[#7C5AC2]">Profile</Link>
+        <Link to="/profile" className="hover:underline text-[#7C5AC2]">
+          Profile
+        </Link>
         {" / "}
         <span className="text-gray-500">Profile Settings</span>
       </div>
@@ -395,7 +524,9 @@ const AccountSettings = () => {
 
 const ConfirmEmailModal = ({ open, onClose, initialEmail, onSave }) => {
   const [email, setEmail] = useState(initialEmail);
-  React.useEffect(() => { if (open) setEmail(initialEmail); }, [open, initialEmail]);
+  React.useEffect(() => {
+    if (open) setEmail(initialEmail);
+  }, [open, initialEmail]);
 
   return (
     <Modal open={open} onClose={onClose} title="Confirm your email">
@@ -404,12 +535,20 @@ const ConfirmEmailModal = ({ open, onClose, initialEmail, onSave }) => {
       </p>
 
       <div className="mt-3">
-        <Input label="Login Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <Input
+          label="Login Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
       </div>
 
       <div className="mt-5 flex gap-3">
-        <Button className="flex-1" onClick={() => onSave(email)}>Save</Button>
-        <GhostButton className="flex-1" onClick={onClose}>Cancel</GhostButton>
+        <Button className="flex-1" onClick={() => onSave(email)}>
+          Save
+        </Button>
+        <GhostButton className="flex-1" onClick={onClose}>
+          Cancel
+        </GhostButton>
       </div>
     </Modal>
   );
@@ -422,7 +561,12 @@ const ChangePasswordModal = ({ open, onClose }) => {
   const [next, setNext] = useState("qwerty55%");
 
   React.useEffect(() => {
-    if (open) { setCur(""); setNext(""); setShow1(false); setShow2(false); }
+    if (open) {
+      setCur("");
+      setNext("");
+      setShow1(false);
+      setShow2(false);
+    }
   }, [open]);
 
   return (
@@ -457,8 +601,12 @@ const ChangePasswordModal = ({ open, onClose }) => {
       </div>
 
       <div className="mt-5 flex gap-3">
-        <Button className="flex-1" onClick={onClose}>Save</Button>
-        <GhostButton className="flex-1" onClick={onClose}>Cancel</GhostButton>
+        <Button className="flex-1" onClick={onClose}>
+          Save
+        </Button>
+        <GhostButton className="flex-1" onClick={onClose}>
+          Cancel
+        </GhostButton>
       </div>
     </Modal>
   );
