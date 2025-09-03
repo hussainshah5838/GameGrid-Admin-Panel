@@ -19,8 +19,8 @@ const rowsData = [
     date: "2023-01-15",
     status: "Active",
     subscription: "Premium",
-    plan: "Premium",              // NEW
-    amount: "$99/month",          // NEW
+    plan: "Premium",
+    amount: "$99/month",
     joinDate: "2023-01-15",
   },
   {
@@ -31,8 +31,8 @@ const rowsData = [
     date: "A minute ago",
     status: "Pending",
     subscription: "Standard",
-    plan: "Standard",             // NEW
-    amount: "$29/month",          // NEW
+    plan: "Standard",
+    amount: "$29/month",
     joinDate: "2023-05-12",
   },
   {
@@ -43,8 +43,8 @@ const rowsData = [
     date: "1 hour ago",
     status: "Approved",
     subscription: "Free",
-    plan: "Free",                 // NEW
-    amount: "$0",                 // NEW
+    plan: "Free",
+    amount: "$0",
     joinDate: "2023-06-20",
   },
   {
@@ -55,8 +55,8 @@ const rowsData = [
     date: "Yesterday",
     status: "Approved",
     subscription: "Premium",
-    plan: "Premium",              // NEW
-    amount: "$99/month",          // NEW
+    plan: "Premium",
+    amount: "$99/month",
     joinDate: "2023-02-10",
   },
   {
@@ -67,8 +67,8 @@ const rowsData = [
     date: "Feb 2, 2023",
     status: "In Progress",
     subscription: "Standard",
-    plan: "Standard",             // NEW
-    amount: "$29/month",          // NEW
+    plan: "Standard",
+    amount: "$29/month",
     joinDate: "2023-04-14",
   },
   {
@@ -79,8 +79,8 @@ const rowsData = [
     date: "Just now",
     status: "Active",
     subscription: "Premium",
-    plan: "Premium",              // NEW
-    amount: "$99/month",          // NEW
+    plan: "Premium",
+    amount: "$99/month",
     joinDate: "2023-03-18",
   },
 ];
@@ -109,30 +109,24 @@ const UserListTable = () => {
   return (
     <div className="space-y-4">
       {/* Toolbar */}
-      <div className="rounded-2xl bg-[#D0EA59] px-3 sm:px-4 py-2.5 flex items-center">
-        <div className="flex items-center gap-5 text-black font-medium">
-          <button type="button" className="p-2 hover:text-gray-700">
-            <FiPlus size={18} />
-          </button>
-          <button type="button" className="p-2 hover:text-gray-700">
-            <FiFilter size={18} />
-          </button>
-          <button type="button" className="p-2 hover:text-gray-700">
-            <FiSliders size={18} />
-          </button>
+      <div className="rounded-2xl bg-[#0C0F14] ring-1 ring-white/10 px-3 sm:px-4 py-2.5 flex items-center shadow-md">
+        <div className="flex items-center gap-1.5 text-white/80">
+          <button type="button" className="p-2 hover:bg-white/5 rounded-md"><FiPlus size={18} /></button>
+          <button type="button" className="p-2 hover:bg-white/5 rounded-md"><FiFilter size={18} /></button>
+          <button type="button" className="p-2 hover:bg-white/5 rounded-md"><FiSliders size={18} /></button>
         </div>
 
         <div className="ml-auto w-48 sm:w-64">
           <div className="relative">
             <FiSearch
               size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40"
             />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search users, plan, amount…"
-              className="h-9 w-full rounded-lg bg-[#111] ring-1 ring-gray-700 pl-9 pr-3 text-sm outline-none placeholder:text-gray-400 text-white focus:ring-2 focus:ring-[#D0EA59]"
+              className="h-9 w-full rounded-lg bg-[#0A0D12] text-white ring-1 ring-white/10 pl-9 pr-3 text-sm outline-none placeholder:text-white/40 focus:ring-2 focus:ring-[#D0EA59]"
             />
           </div>
         </div>
@@ -140,15 +134,14 @@ const UserListTable = () => {
 
       {/* Mobile (cards) */}
       <ul className="md:hidden space-y-3">
-        <li className="px-3 text-xs text-gray-400">Showing {filtered.length} users</li>
-        {filtered.map((r, idx) => {
+        <li className="px-3 text-xs text-white/60">Showing {filtered.length} users</li>
+        {filtered.map((r) => {
           const active = checked.has(r.userId);
           return (
             <li
               key={r.userId}
-              className={`rounded-2xl ring-1 ring-gray-800 bg-[#111] text-white p-3 ${
-                active ? "outline outline-2 outline-[#D0EA59]" : ""
-              }`}
+              className={`rounded-2xl ring-1 ring-white/10 bg-[#0C0F14] text-white p-3 shadow-md transition
+                ${active ? "ring-[#D0EA59]/30 shadow-lg" : "hover:ring-white/15 hover:shadow-lg"}`}
             >
               <div className="flex items-start gap-3">
                 <Checkbox
@@ -161,28 +154,28 @@ const UserListTable = () => {
                 />
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-400">{r.userId}</span>
+                    <span className="text-xs text-white/60">{r.userId}</span>
                     <StatusPill status={r.status} />
                   </div>
                   <div className="mt-1">
                     <UserCell avatar={r.avatar} name={r.name} />
-                    <p className="text-xs text-gray-300 mt-1">{r.email}</p>
+                    <p className="text-xs text-white/70 mt-1">{r.email}</p>
                   </div>
                   <div className="grid grid-cols-2 gap-2 mt-3 text-sm">
-                    <div className="rounded-lg bg-[#151515] p-2">
-                      <p className="text-gray-400 text-xs">Plan</p>
-                      <p className="font-medium">{r.plan}</p>
+                    <div className="rounded-lg bg-[#0A0D12] ring-1 ring-white/5 p-2">
+                      <p className="text-white/60 text-xs">Plan</p>
+                      <p className="font-medium text-white">{r.plan}</p>
                     </div>
-                    <div className="rounded-lg bg-[#151515] p-2">
-                      <p className="text-gray-400 text-xs">Amount</p>
-                      <p className="font-medium">{r.amount}</p>
+                    <div className="rounded-lg bg-[#0A0D12] ring-1 ring-white/5 p-2">
+                      <p className="text-white/60 text-xs">Amount</p>
+                      <p className="font-medium text-white">{r.amount}</p>
                     </div>
-                    <div className="rounded-lg bg-[#151515] p-2">
-                      <p className="text-gray-400 text-xs">Joined</p>
-                      <p className="font-medium">{r.joinDate}</p>
+                    <div className="rounded-lg bg-[#0A0D12] ring-1 ring-white/5 p-2">
+                      <p className="text-white/60 text-xs">Joined</p>
+                      <p className="font-medium text-white">{r.joinDate}</p>
                     </div>
-                    <div className="rounded-lg bg-[#151515] p-2">
-                      <p className="text-gray-400 text-xs">Date</p>
+                    <div className="rounded-lg bg-[#0A0D12] ring-1 ring-white/5 p-2">
+                      <p className="text-white/60 text-xs">Date</p>
                       <DateCell text={r.date} />
                     </div>
                   </div>
@@ -194,11 +187,11 @@ const UserListTable = () => {
       </ul>
 
       {/* Desktop (table) */}
-      <div className="rounded-2xl bg-[#111] shadow-sm ring-1 ring-gray-800 overflow-hidden text-white hidden md:block">
+      <div className="rounded-2xl bg-[#0C0F14] shadow-md ring-1 ring-white/10 overflow-hidden text-white hidden md:block">
         <div className="overflow-x-auto">
           <table className="min-w-[1000px] w-full text-sm">
             <thead>
-              <tr className="text-gray-300 border-b border-gray-700">
+              <tr className="text-white/70 border-b border-white/10 bg-[#0A0D12]">
                 <th className="px-4 py-3 w-10">
                   <Checkbox
                     checked={allSelected}
@@ -210,8 +203,8 @@ const UserListTable = () => {
                 <th className="py-3 text-left">User ID</th>
                 <th className="py-3 text-left">User</th>
                 <th className="py-3 text-left hidden lg:table-cell">Email</th>
-                <th className="py-3 text-left">Plan</th>         {/* NEW */}
-                <th className="py-3 text-left hidden md:table-cell">Amount</th> {/* NEW */}
+                <th className="py-3 text-left">Plan</th>
+                <th className="py-3 text-left hidden md:table-cell">Amount</th>
                 <th className="py-3 text-left">Status</th>
                 <th className="py-3 text-left hidden xl:table-cell">Date</th>
                 <th className="py-3 text-left hidden md:table-cell">Join Date</th>
@@ -221,14 +214,13 @@ const UserListTable = () => {
             <tbody>
               {filtered.map((row, idx) => {
                 const active = checked.has(row.userId);
-                const zebra = idx % 2 === 1;
-
                 return (
                   <tr
                     key={row.userId}
-                    className={`${
-                      active ? "bg-[#1E1E1E]" : zebra ? "bg-[#151515]" : "bg-[#111]"
-                    } hover:bg-[#1E1E1E] border-b border-gray-800 transition-colors`}
+                    className={`
+                      ${active ? "bg-white/[0.06]" : "odd:bg-white/[0.02] even:bg-transparent"}
+                      hover:bg-white/[0.04] border-b border-white/5 transition
+                    `}
                   >
                     <td className="px-4 py-3">
                       <Checkbox
@@ -241,20 +233,18 @@ const UserListTable = () => {
                       />
                     </td>
 
-                    <td className="py-3">{row.userId}</td>
-                    <td className="py-3">
-                      <UserCell avatar={row.avatar} name={row.name} />
-                    </td>
-                    <td className="py-3 text-gray-300 hidden lg:table-cell">{row.email}</td>
-                    <td className="py-3 text-gray-200">{row.plan}</td>
-                    <td className="py-3 text-gray-300 hidden md:table-cell">{row.amount}</td>
+                    <td className="py-3 text-white">{row.userId}</td>
+                    <td className="py-3"><UserCell avatar={row.avatar} name={row.name} /></td>
+                    <td className="py-3 text-white/80 hidden lg:table-cell">{row.email}</td>
+                    <td className="py-3 text-white">{row.plan}</td>
+                    <td className="py-3 text-white/80 hidden md:table-cell">{row.amount}</td>
                     <td className="py-3">
                       <StatusPill status={row.status} />
                     </td>
                     <td className="py-3 hidden xl:table-cell">
                       <DateCell text={row.date} />
                     </td>
-                    <td className="py-3 text-gray-300 hidden md:table-cell">{row.joinDate}</td>
+                    <td className="py-3 text-white/80 hidden md:table-cell">{row.joinDate}</td>
                   </tr>
                 );
               })}
@@ -263,23 +253,23 @@ const UserListTable = () => {
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-end gap-1 p-3 border-t border-gray-800">
-          <button className="h-8 w-8 grid place-items-center rounded-md hover:bg-gray-800 text-white">
+        <div className="flex items-center justify-end gap-1 p-3 border-t border-white/10">
+          <button className="h-8 w-8 grid place-items-center rounded-md hover:bg-white/5 text-white/80">
             <FiChevronLeft />
           </button>
           {[1, 2, 3, 4, 5].map((n) => (
             <button
               key={n}
-              className={`h-8 w-8 rounded-md text-sm ${
-                n === 1
-                  ? "bg-[#D0EA59] text-black font-semibold"
-                  : "bg-[#111] text-white ring-1 ring-gray-700 hover:bg-gray-800"
-              }`}
+              className={`h-8 w-8 rounded-md text-sm transition
+                ${n === 1
+                  ? "bg-[#D0EA59]/20 text-[#D0EA59] ring-1 ring-[#D0EA59]/30"
+                  : "text-white/80 hover:bg-white/5 ring-1 ring-white/10"
+                }`}
             >
               {n}
             </button>
           ))}
-          <button className="h-8 w-8 grid place-items-center rounded-md hover:bg-gray-800 text-white">
+          <button className="h-8 w-8 grid place-items-center rounded-md hover:bg-white/5 text-white/80">
             <FiChevronRight />
           </button>
         </div>

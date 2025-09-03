@@ -1,53 +1,40 @@
 // tailwind.config.js (excerpt)
 module.exports = {
-content: ["./index.html","./src/**/*.{js,ts,jsx,tsx}"],
-theme: {
-extend: {
-fontFamily: { satoshi: ["Satoshi", "sans-serif"] },
-colors: {
-brand: {
-primary: "#D0EA59", // buttons / accents
-primaryDark: "#B7D24A", // hover / active
-bg: "#111111", // page background
-text: "#FFFFFF", // primary text / headings
-surface: "#141414" // cards / panels (subtle lift)
-}
-}
-}
-},
-plugins: [],
+  darkMode: ["class"], // keep switch option
+  content: ["./src/**/*.{js,ts,jsx,tsx}"],
+  theme: {
+    extend: {
+      colors: {
+        bg: "var(--bg)",
+        surface: "var(--surface)",
+        muted: "var(--muted)",
+        text: {
+          primary: "var(--text-primary)",
+          secondary: "var(--text-secondary)",
+          muted: "var(--text-muted)",
+        },
+        brand: {
+          DEFAULT: "var(--brand)",
+          600: "var(--brand-600)",
+          700: "var(--brand-700)",
+          950: "var(--brand-950)",
+        },
+        border: "var(--border)",
+        ring: "var(--ring)",
+        success: "var(--success)",
+        warning: "var(--warning)",
+        danger: "var(--danger)",
+        info: "var(--info)",
+        live: "var(--live)",
+        upcoming: "var(--upcoming)",
+      },
+      boxShadow: {
+        card: "0 1px 0 rgba(255,255,255,0.03), 0 8px 24px rgba(0,0,0,.35)",
+      },
+      borderRadius: {
+        card: "1rem",
+      },
+    },
+  },
+  plugins: [],
 };
-
-
-
-
-
-
-
-
-
-
-// /** @type {import('tailwindcss').Config} */
-// module.exports = {
-//   content: [
-//     "./index.html",
-//     "./src/**/*.{js,ts,jsx,tsx}",
-//   ],
-//   theme: {
-//     extend: {
-//       fontFamily: {
-//         satoshi: ["Satoshi", "sans-serif"],
-//       },
-//       colors: {
-//         brand: {
-//           primary: "#1E40AF",     // main blue
-//           primaryDark: "#1E3A8A", // hover/darker
-//           secondary: "#9333EA",   // accent purple
-//           bg: "#F9FAFB",          // app background
-//           text:"#111827",        // default text
-//         },
-//       },
-//     },
-//   },
-//   plugins: [],
-// };

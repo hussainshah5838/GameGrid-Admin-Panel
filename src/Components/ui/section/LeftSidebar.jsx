@@ -85,7 +85,7 @@ const LeftSidebar = ({ isOpen, setIsOpen }) => {
                         <item.icon
                           className={`w-5 h-5 ${
                             active
-                              ? "text-black"
+                              ? "text-white"
                               : "text-gray-400 group-hover:text-white"
                           }`}
                         />
@@ -173,14 +173,14 @@ const LeftSidebar = ({ isOpen, setIsOpen }) => {
                     className={`group flex items-center gap-3 px-3 py-2 rounded-lg transition-colors
                       ${
                         active
-                          ? "bg-[#D0EA59] text-black shadow-sm"
+                          ? " text-white shadow-sm"
                           : "text-gray-300 hover:bg-[#D0EA59]/20 hover:text-white"
                       }`}
                   >
                     <item.icon
                       className={`w-5 h-5 ${
                         active
-                          ? "text-black"
+                          ? "text-white"
                           : "text-gray-400 group-hover:text-white"
                       }`}
                     />

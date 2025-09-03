@@ -39,60 +39,139 @@ const DashboardPage = () => {
       <StatsOverview />
 
       {/* Charts Section */}
+      {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Trends Line Chart */}
-        <div className="bg-[#111] rounded-2xl shadow-sm ring-1 ring-gray-800 p-4">
-          <h2 className="text-lg font-semibold mb-4 text-white">Trend Popularity</h2>
+        <div className="bg-[#0C0F14] rounded-2xl ring-1 ring-white/10 p-4 shadow-md hover:ring-white/15 transition">
+          <h2 className="text-lg font-semibold mb-4 text-white">
+            Trend Popularity
+          </h2>
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={trendsData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-              <XAxis dataKey="name" stroke="#ccc" tick={{ fill: "#ccc" }} />
-              <YAxis stroke="#ccc" tick={{ fill: "#ccc" }} />
-              <Tooltip
-                contentStyle={{ backgroundColor: "#111", border: "none", color: "#fff" }}
-                labelStyle={{ color: "#ccc" }}
+            <LineChart
+              data={trendsData}
+              margin={{ top: 6, right: 12, left: 0, bottom: 0 }}
+            >
+              <defs>
+                {/* Soft glow under line */}
+                <linearGradient id="trendGlow" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#D0EA59" stopOpacity="0.35" />
+                  <stop offset="100%" stopColor="#D0EA59" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+
+              <CartesianGrid stroke="rgba(255,255,255,0.06)" vertical={false} />
+              <XAxis
+                dataKey="name"
+                tick={{ fill: "#9CA3AF", fontSize: 12 }}
+                axisLine={false}
+                tickLine={false}
+                tickMargin={8}
               />
-              <Legend wrapperStyle={{ color: "#ccc" }} />
+              <YAxis
+                tick={{ fill: "#9CA3AF", fontSize: 12 }}
+                axisLine={false}
+                tickLine={false}
+                width={40}
+                tickMargin={8}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#0C0F14",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  borderRadius: 12,
+                  color: "#fff",
+                }}
+                labelStyle={{ color: "#CBD5E1" }}
+              />
+              {/* Legend omitted (single series) */}
+
+              {/* Fill for subtle area effect */}
               <Line
                 type="monotone"
                 dataKey="popularity"
                 stroke="#D0EA59"
-                strokeWidth={3}
-                activeDot={{ r: 8 }}
+                strokeWidth={2.5}
+                dot={{ r: 3, stroke: "#0C0F14", strokeWidth: 2 }}
+                activeDot={{ r: 5 }}
+              />
+              {/* Trick: an Area look via a second line with stroke="none" and fill gradient */}
+              <Line
+                type="monotone"
+                dataKey="popularity"
+                stroke="none"
+                fill="url(#trendGlow)"
+                fillOpacity={1}
               />
             </LineChart>
           </ResponsiveContainer>
         </div>
 
         {/* Revenue Bar Chart */}
-        <div className="bg-[#111] rounded-2xl shadow-sm ring-1 ring-gray-800 p-4">
-          <h2 className="text-lg font-semibold mb-4 text-white">Monthly Revenue</h2>
+        <div className="bg-[#0C0F14] rounded-2xl ring-1 ring-white/10 p-4 shadow-md hover:ring-white/15 transition">
+          <h2 className="text-lg font-semibold mb-4 text-white">
+            Monthly Revenue
+          </h2>
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={revenueData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-              <XAxis dataKey="month" stroke="#ccc" tick={{ fill: "#ccc" }} />
-              <YAxis stroke="#ccc" tick={{ fill: "#ccc" }} />
-              <Tooltip
-                contentStyle={{ backgroundColor: "#111", border: "none", color: "#fff" }}
-                labelStyle={{ color: "#ccc" }}
+            <BarChart
+              data={revenueData}
+              margin={{ top: 6, right: 12, left: 0, bottom: 0 }}
+            >
+              <defs>
+                <linearGradient id="revBars" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#D0EA59" stopOpacity="0.9" />
+                  <stop offset="100%" stopColor="#D0EA59" stopOpacity="0.25" />
+                </linearGradient>
+              </defs>
+
+              <CartesianGrid stroke="rgba(255,255,255,0.06)" vertical={false} />
+              <XAxis
+                dataKey="month"
+                tick={{ fill: "#9CA3AF", fontSize: 12 }}
+                axisLine={false}
+                tickLine={false}
+                tickMargin={8}
               />
-              <Legend wrapperStyle={{ color: "#ccc" }} />
-              <Bar dataKey="revenue" fill="#D0EA59" radius={[8, 8, 0, 0]} />
+              <YAxis
+                tick={{ fill: "#9CA3AF", fontSize: 12 }}
+                axisLine={false}
+                tickLine={false}
+                width={48}
+                tickMargin={8}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#0C0F14",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  borderRadius: 12,
+                  color: "#fff",
+                }}
+                labelStyle={{ color: "#CBD5E1" }}
+              />
+              {/* Legend omitted (single series) */}
+
+              <Bar
+                dataKey="revenue"
+                fill="url(#revBars)"
+                radius={[8, 8, 4, 4]}
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      
       {/* Payments Section */}
-      <div className="bg-[#111] rounded-2xl shadow-sm ring-1 ring-gray-800 p-4">
-        <h2 className="text-lg font-semibold mb-4 text-white">Latest Payments</h2>
+      <div className="bg-[#111] rounded-2xl ring-1 ring-gray-800 p-4 shadow-card shadow-xl">
+        <h2 className="text-lg font-semibold mb-4 text-white">
+          Latest Payments
+        </h2>
         <PaymentListTable />
       </div>
 
       {/* Trends Table Full */}
-      <div className="bg-[#111] rounded-2xl shadow-sm ring-1 ring-gray-800 p-4">
-        <h2 className="text-lg font-semibold mb-4 text-white">Trends Details</h2>
+      <div className="bg-[#111] rounded-2xl ring-1 ring-gray-800 p-4 shadow-card shadow-xl">
+        <h2 className="text-lg font-semibold mb-4 text-white">
+          Trends Details
+        </h2>
         <TrendListTable />
       </div>
     </div>

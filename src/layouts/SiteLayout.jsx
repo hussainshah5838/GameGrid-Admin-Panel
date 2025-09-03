@@ -4,7 +4,7 @@ import LeftSidebar from "../Components/ui/section/LeftSidebar";
 import Header from "../Components/ui/section/Header";
 
 const DashboardLayout = () => {
-  const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
+  const [leftSidebarOpen, setLeftSidebarOpen] = useState(true);
 
   return (
     <div className="flex h-screen bg-brand-bg text-brand-text overflow-hidden relative">

@@ -10,30 +10,43 @@ const defaultStats = [
   { title: "Active Users", value: "239K",  change: 6.08,   color: "blue"   },
 ];
 
-/* Updated Solid Color Styles (same as Subscription Overview) */
-const colorStyles = {
-  yellow: "bg-[#D0EA59] text-black",     // Total Subscriptions (lime)
-  green:  "bg-green-500 text-white",
-  blue:   "bg-blue-500 text-white",     // Active
-  purple: "bg-yellow-500 text-white",    // Trial
-        // Expired/Cancelled
+/* Subtle accent styles (no full-color card backgrounds) */
+const accents = {
+  yellow: { dot: "bg-[#D0EA59]",  badgeBg: "bg-[#D0EA59]/10",  badgeText: "text-[#D0EA59]" },
+  green:  { dot: "bg-emerald-400",badgeBg: "bg-emerald-400/10",badgeText: "text-emerald-400" },
+  blue:   { dot: "bg-blue-400",   badgeBg: "bg-blue-400/10",   badgeText: "text-blue-400" },
+  purple: { dot: "bg-violet-400", badgeBg: "bg-violet-400/10", badgeText: "text-violet-400" },
 };
 
 const StatCard = ({ title, value, change, color = "yellow" }) => {
   const isPositive = change >= 0;
   const Arrow = isPositive ? FiArrowUpRight : FiArrowDownRight;
   const formatted = `${isPositive ? "+" : ""}${Math.abs(change).toFixed(2)}%`;
-  const bgClass = colorStyles[color] || colorStyles.yellow;
+  const a = accents[color] || accents.yellow;
 
   return (
     <div
-      className={`rounded-2xl ${bgClass} ring-1 ring-black/10
-                  shadow-lg p-4 sm:p-5 min-w-[200px]`}
+      className="
+        rounded-2xl bg-[#0C0F14] ring-1 ring-white/10
+        shadow-md p-4 sm:p-5 min-w-[200px]
+        hover:shadow-lg hover:ring-white/15 transition
+      "
     >
       {/* Top row: title + change */}
       <div className="flex items-center justify-between">
-        <p className="text-[12px] sm:text-[13px] font-medium">{title}</p>
-        <span className="inline-flex items-center gap-1 text-[11px] sm:text-[12px] font-medium">
+        <div className="flex items-center gap-2">
+          <span className={`h-2.5 w-2.5 rounded-full ${a.dot}`} />
+          <p className="text-[12px] sm:text-[13px] font-medium text-white/80">{title}</p>
+        </div>
+
+        <span
+          className={`
+            inline-flex items-center gap-1 text-[11px] sm:text-[12px]
+            font-medium px-2 py-1 rounded-full
+            ${a.badgeBg}
+            ${isPositive ? "text-emerald-400" : "text-rose-400"}
+          `}
+        >
           {formatted}
           <Arrow size={14} />
         </span>
@@ -41,7 +54,9 @@ const StatCard = ({ title, value, change, color = "yellow" }) => {
 
       {/* Value */}
       <div className="mt-2 sm:mt-2.5">
-        <p className="text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight">{value}</p>
+        <p className="text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight text-white">
+          {value}
+        </p>
       </div>
     </div>
   );
@@ -72,14 +87,14 @@ const StatsOverview = ({ statsData = defaultStats }) => {
         <button
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          className="flex items-center gap-1 text-sm text-white/90 font-medium focus:outline-none"
+          className="flex items-center gap-1 text-sm text-white/80 font-medium focus:outline-none"
         >
           {selectedFilter}
           <IoChevronDown size={16} />
         </button>
         {open && (
           <ul
-            className="absolute mt-2 w-36 bg-[#1E1E1E] shadow-lg rounded-md text-sm text-white z-10"
+            className="absolute mt-2 w-36 bg-[#1E1E1E] shadow-lg rounded-md text-sm text-white z-10 ring-1 ring-white/10"
             role="menu"
           >
             {filters.map((f) => (
@@ -87,8 +102,8 @@ const StatsOverview = ({ statsData = defaultStats }) => {
                 key={f}
                 role="menuitem"
                 onClick={() => { setSelectedFilter(f); setOpen(false); }}
-                className={`px-4 py-2 hover:bg-gray-800 cursor-pointer ${
-                  f === selectedFilter ? "font-semibold text-[#D0EA59]" : ""
+                className={`px-4 py-2 hover:bg-white/5 cursor-pointer ${
+                  f === selectedFilter ? "font-semibold text-white" : "text-white/80"
                 }`}
               >
                 {f}
@@ -109,6 +124,3 @@ const StatsOverview = ({ statsData = defaultStats }) => {
 };
 
 export default StatsOverview;
-
-
-

@@ -49,8 +49,8 @@ const Router = createBrowserRouter([
         element: <MessagesPage />,
       },
       {
-        path: "notifications",          // ⬅️ add this
-        element: <NotificationsPage />, // ⬅️ now route works
+        path: "notifications",         
+        element: <NotificationsPage />, 
       },
     ],
   },
