@@ -1,4 +1,3 @@
-// MessagesPage.jsx
 import React, { useMemo, useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FiSearch, FiSend } from "react-icons/fi";
@@ -30,20 +29,6 @@ const THREADS = [
           "Lorem ipsum dolor sit amet consectetur. Feugiat integer purus in et molestie facilisis. Hac vel vitae neque nec eu sed.",
         timestamp: new Date(Date.now() - 1800000).toISOString(),
       },
-      {
-        id: "m3",
-        from: "me",
-        text:
-          "Lorem ipsum dolor sit amet consectetur. Feugiat integer semper purus in et molestie facilisis. Hac vel vitae neque nec eu sed.",
-        timestamp: new Date(Date.now() - 900000).toISOString(),
-      },
-      {
-        id: "m4",
-        from: "them",
-        text:
-          "Lorem ipsum dolor sit amet consectetur. Feugiat integer purus in et molestie facilisis. Hac vel vitae neque nec eu sed.",
-        timestamp: new Date(Date.now() - 600000).toISOString(),
-      },
     ],
   },
   {
@@ -63,38 +48,15 @@ const THREADS = [
         text: "Hey there!",
         timestamp: new Date(Date.now() - 86400000).toISOString(),
       },
-      {
-        id: "m2",
-        from: "me",
-        text: "All good 👌",
-        timestamp: new Date(Date.now() - 82800000).toISOString(),
-      },
-    ],
-  },
-  {
-    id: "jane",
-    user: {
-      name: "Jane Smith",
-      avatar: "https://i.pravatar.cc/80?img=13",
-      online: false,
-    },
-    preview: "Hi Buddy!👋",
-    time: "12:00 PM",
-    unread: 1,
-    messages: [
-      {
-        id: "m1",
-        from: "them",
-        text: "Ping!",
-        timestamp: new Date(Date.now() - 172800000).toISOString(),
-      },
     ],
   },
 ];
 
 /* ---------------------------------- UI atoms ---------------------------------- */
 const Pill = ({ children, className = "" }) => (
-  <span className={`inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full text-[11px] font-semibold ${className}`}>
+  <span
+    className={`inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full text-[11px] font-semibold ${className}`}
+  >
     {children}
   </span>
 );
@@ -105,7 +67,7 @@ const ChatBubble = ({ side = "left", children }) => {
     <div className={`flex ${isLeft ? "justify-start" : "justify-end"}`}>
       <div
         className={`max-w-[70%] rounded-xl px-4 py-3 text-sm leading-relaxed ${
-          isLeft ? "bg-gray-100 text-gray-700" : "bg-[#7C5AC2] text-white"
+          isLeft ? "bg-gray-800 text-white" : "bg-[#7C5AC2] text-white"
         }`}
       >
         {children}
@@ -144,7 +106,6 @@ const MessagesPage = () => {
     return threads[idx >= 0 ? idx : 0];
   }, [threads, threadId]);
 
-  // Filter threads based on search query
   const filteredThreads = useMemo(() => {
     if (!searchQuery) return threads;
     return threads.filter(
@@ -154,27 +115,23 @@ const MessagesPage = () => {
     );
   }, [threads, searchQuery]);
 
-  // mark unread as read when opening
   useEffect(() => {
     if (!active) return;
     setThreads((prev) => prev.map((t) => (t.id === active.id ? { ...t, unread: 0 } : t)));
   }, [active?.id]);
 
-  // Auto-scroll to bottom of messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [active?.messages]);
 
   const handleSendMessage = () => {
     if (!newMessage.trim() || !active) return;
-
     const message = {
       id: generateId(),
       from: "me",
       text: newMessage,
       timestamp: new Date().toISOString(),
     };
-
     setThreads((prev) =>
       prev.map((thread) =>
         thread.id === active.id
@@ -194,60 +151,23 @@ const MessagesPage = () => {
     if (e.key === "Enter") handleSendMessage();
   };
 
-  // Simulate receiving messages (for demo purposes)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (Math.random() > 0.7 && threads.length > 0) {
-        const randomThreadIndex = Math.floor(Math.random() * threads.length);
-        const thread = threads[randomThreadIndex];
-
-        // Only send to a non-active thread so unread pill shows like mock
-        if (thread.id !== active?.id) {
-          const incoming = {
-            id: generateId(),
-            from: "them",
-            text: "This is an automated reply!",
-            timestamp: new Date().toISOString(),
-          };
-
-          setThreads((prev) =>
-            prev.map((t) =>
-              t.id === thread.id
-                ? {
-                    ...t,
-                    messages: [...t.messages, incoming],
-                    preview: incoming.text,
-                    time: formatTime(new Date()),
-                    unread: (t.unread || 0) + 1,
-                  }
-                : t
-            )
-          );
-        }
-      }
-    }, 15000);
-
-    return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [threads, active?.id]);
-
-  if (!active) return <div className="p-4">Loading...</div>;
+  if (!active) return <div className="p-4 text-white">Loading...</div>;
 
   return (
-    <div className="p-3 sm:p-4">
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm">
+    <div className="p-3 sm:p-4 bg-black min-h-screen text-white">
+      <div className="rounded-2xl border border-gray-700 shadow-sm">
         <div className="grid grid-cols-1 lg:grid-cols-[300px,1fr] gap-4 p-3 sm:p-4">
           {/* LEFT: Thread list */}
-          <aside className="bg-gray-50 rounded-xl p-4">
-            <h2 className="text-[18px] font-semibold text-[#7C5AC2]">Messages</h2>
-            <p className="text-xs text-gray-400 mt-1">All your messages are listed bellow</p>
+          <aside className="bg-[#1E1E1E] rounded-xl p-4">
+            <h2 className="text-[18px] font-semibold text-[#D0EA59]">Messages</h2>
+            <p className="text-xs text-gray-400 mt-1">All your messages are listed below</p>
 
             <div className="relative mt-4 mb-3">
               <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 placeholder="Search conversations"
-                className="w-full h-9 rounded-full bg-gray-100 pl-9 pr-3 text-sm outline-none"
+                className="w-full h-9 rounded-full bg-gray-800 pl-9 pr-3 text-sm text-white outline-none"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -261,8 +181,8 @@ const MessagesPage = () => {
                   <button
                     key={t.id}
                     onClick={() => navigate(`/messages/${t.id}`)}
-                    className={`w-full grid grid-cols-[auto,1fr,auto] items-center gap-3 rounded-xl px-2 py-2 text-left hover:bg-white ${
-                      isActive ? "bg-white shadow ring-1 ring-gray-200" : ""
+                    className={`w-full grid grid-cols-[auto,1fr,auto] items-center gap-3 rounded-xl px-2 py-2 text-left hover:bg-gray-700 ${
+                      isActive ? "bg-gray-700 shadow ring-1 ring-gray-600" : ""
                     }`}
                   >
                     <div className="relative">
@@ -272,12 +192,12 @@ const MessagesPage = () => {
                         className="w-8 h-8 rounded-full object-cover"
                       />
                       {t.user.online && (
-                        <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 border border-white"></span>
+                        <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 border border-gray-800"></span>
                       )}
                     </div>
 
                     <div className="min-w-0">
-                      <div className="font-medium text-sm text-gray-900 truncate">{t.user.name}</div>
+                      <div className="font-medium text-sm text-white truncate">{t.user.name}</div>
                       <div className="text-[12px] text-gray-400 truncate">{t.preview}</div>
                     </div>
 
@@ -294,9 +214,9 @@ const MessagesPage = () => {
           </aside>
 
           {/* RIGHT: Conversation */}
-          <section className="rounded-xl">
+          <section className="rounded-xl flex flex-col">
             {/* Header */}
-            <div className="rounded-xl border border-gray-200 p-4 flex items-center justify-between">
+            <div className="rounded-xl border border-gray-700 p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <img
@@ -305,11 +225,11 @@ const MessagesPage = () => {
                     className="w-10 h-10 rounded-full object-cover"
                   />
                   {active.user.online && (
-                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white"></span>
+                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-gray-800"></span>
                   )}
                 </div>
                 <div>
-                  <div className="font-semibold">{active.user.name}</div>
+                  <div className="font-semibold text-white">{active.user.name}</div>
                   <div className="text-xs text-emerald-500 flex items-center gap-1">
                     <span className="w-2 h-2 rounded-full bg-emerald-500" />
                     {active.user.online ? "Online" : "Offline"}
@@ -317,40 +237,22 @@ const MessagesPage = () => {
                 </div>
               </div>
 
-              {/* Only search icon (no input) to match mock */}
-              <button className="p-2 rounded-full hover:bg-gray-100" title="Search in conversation">
+              <button className="p-2 rounded-full hover:bg-gray-700" title="Search in conversation">
                 <FiSearch className="text-gray-400" size={18} />
               </button>
             </div>
 
             {/* Messages area */}
-            <div className="mt-4 bg-white rounded-xl border border-gray-200 p-4 space-y-8 h-[56vh] overflow-y-auto">
+            <div className="mt-4 bg-[#1E1E1E] rounded-xl border border-gray-700 p-4 space-y-4 h-[56vh] overflow-y-auto flex-1">
               {active.messages.map((m, idx) => {
                 const isMe = m.from === "me";
-                const showAvatar =
-                  !isMe &&
-                  (idx === active.messages.length - 1 ||
-                    active.messages[idx + 1].from !== m.from);
-
                 return (
                   <div key={m.id} className="flex items-end gap-2">
-                    {/* Left avatar only for 'them' at end of a block */}
-                    {!isMe && showAvatar ? (
-                      <img
-                        src={active.user.avatar}
-                        alt="avatar"
-                        className="w-6 h-6 rounded-full object-cover"
-                      />
-                    ) : (
-                      !isMe && <div className="w-6" />
-                    )}
-
+                    {!isMe && <div className="w-6" />}
                     <div className="flex-1">
                       <ChatBubble side={isMe ? "right" : "left"}>{m.text}</ChatBubble>
                       <div
-                        className={`text-xs text-gray-400 mt-1 ${
-                          isMe ? "text-right" : "text-left"
-                        }`}
+                        className={`text-xs text-gray-400 mt-1 ${isMe ? "text-right" : "text-left"}`}
                       >
                         {formatTime(m.timestamp)}
                       </div>
@@ -365,7 +267,7 @@ const MessagesPage = () => {
             <div className="mt-4 flex items-center gap-3">
               <input
                 placeholder="Enter your message here ………"
-                className="flex-1 h-11 rounded-xl bg-gray-100 px-4 text-sm outline-none"
+                className="flex-1 h-11 rounded-xl bg-gray-800 px-4 text-sm text-white outline-none"
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 onKeyDown={handleKeyDown}

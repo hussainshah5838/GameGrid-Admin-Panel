@@ -1,100 +1,194 @@
+import React, { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   MdDashboard,
+  MdOutlineAirplaneTicket,
   MdPeople,
+  MdTrendingUp,
   MdPayment,
   MdSettings,
   MdLogout,
   MdPerson,
-  MdInventory2,
-  MdStore,
+  MdMessage,
 } from "react-icons/md";
-import { useLocation, Link } from "react-router-dom";
-import { IoClose } from "react-icons/io5";
-import { IoChevronDown, IoChevronUp } from "react-icons/io5";
-import React, { useState } from "react";
+import { IoClose, IoChevronDown, IoChevronUp } from "react-icons/io5";
 
 const menuItems = [
   { icon: MdDashboard, label: "Dashboard", path: "/" },
   { icon: MdPeople, label: "Users", path: "/users" },
-  { icon: MdStore, label: "Store", path: "/store" },
-  { icon: MdInventory2, label: "Shipments", path: "/shipments" },
   { icon: MdPayment, label: "Payments", path: "/payments" },
+  { icon: MdOutlineAirplaneTicket, label: "Tickets", path: "/tickets" },
+  { icon: MdTrendingUp, label: "Trends", path: "/trends" },
+  { icon: MdMessage, label: "Messages", path: "/messages/*" },
 ];
 
 const LeftSidebar = ({ isOpen, setIsOpen }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   const isMatch = (p) =>
     p === "/" ? location.pathname === "/" : location.pathname.startsWith(p);
 
   const handleLogout = () => {
-    localStorage.clear();
-    sessionStorage.clear();
+    const confirmLogout = window.confirm("Are you sure you want to logout?");
+    if (confirmLogout) {
+      localStorage.clear();
+      sessionStorage.clear();
+      navigate("/auth/login");
+    }
   };
 
   return (
     <>
-      {/* Mobile backdrop */}
+      {/* Mobile Sidebar (overlay style) */}
       {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-20 lg:hidden"
-          onClick={() => setIsOpen(false)}
-        />
+        <div className="fixed inset-0 z-30 flex lg:hidden">
+          <aside className="w-60 bg-black text-white flex flex-col z-40">
+            {/* Logo */}
+            {/* Logo Section */}
+            <div className="flex items-center justify-between px-4 h-16 sm:h-20">
+              <img
+                src="/assets/Logo.png"
+                alt="Logo"
+                className="h-6 sm:h-8 md:h-10 w-auto object-contain"
+              />
+              <button
+                onClick={() => setIsOpen(false)}
+                className="p-2 hover:bg-gray-700 rounded-full transition"
+              >
+                <IoClose size={20} className="sm:size-22 md:size-24" />
+              </button>
+            </div>
+            <div className="h-px bg-gray-700 mx-4" />
+
+            {/* Menu */}
+            <nav className="flex-1 overflow-y-auto px-2 py-4 space-y-2">
+              <ul className="flex flex-col space-y-2">
+                {menuItems.map((item) => {
+                  const active = isMatch(item.path);
+                  return (
+                    <li key={item.label} className="relative">
+                      {active && (
+                        <span className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1.5 rounded-full bg-[#D0EA59]" />
+                      )}
+                      <Link
+                        to={item.path}
+                        onClick={() => setIsOpen(false)}
+                        className={`group flex items-center gap-3 px-3 py-2 rounded-lg transition-colors
+                          ${
+                            active
+                              ? "bg-[#D0EA59] text-black shadow-sm"
+                              : "text-gray-300 hover:bg-[#D0EA59]/20 hover:text-white"
+                          }`}
+                      >
+                        <item.icon
+                          className={`w-5 h-5 ${
+                            active
+                              ? "text-black"
+                              : "text-gray-400 group-hover:text-white"
+                          }`}
+                        />
+                        <span className="text-sm font-medium leading-6">
+                          {item.label}
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+
+            {/* Footer */}
+            <div className="mt-auto px-2 py-4 space-y-2">
+              <button
+                onClick={() => setSettingsOpen(!settingsOpen)}
+                className="flex w-full items-center justify-between px-3 py-2 rounded-lg text-sm font-medium
+                  text-gray-300 hover:bg-[#D0EA59]/20 hover:text-white transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <MdSettings className="w-5 h-5 text-gray-400" />
+                  <span>Settings</span>
+                </div>
+                {settingsOpen ? (
+                  <IoChevronUp className="w-4 h-4" />
+                ) : (
+                  <IoChevronDown className="w-4 h-4" />
+                )}
+              </button>
+
+              {settingsOpen && (
+                <div className="ml-6 mt-1 space-y-1">
+                  <Link
+                    to="/profile"
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:bg-[#D0EA59]/20 hover:text-white transition-colors"
+                  >
+                    <MdPerson className="w-5 h-5 text-gray-400" />
+                    Profile
+                  </Link>
+                </div>
+              )}
+
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:bg-[#D0EA59]/20 hover:text-white transition-colors w-full"
+              >
+                <MdLogout className="w-5 h-5 text-gray-400" />
+                Logout
+              </button>
+            </div>
+          </aside>
+
+          {/* Backdrop */}
+          <div
+            className="flex-1 bg-black/50"
+            onClick={() => setIsOpen(false)}
+          />
+        </div>
       )}
 
+      {/* Desktop Sidebar (collapsible) */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 w-60 bg-[#f5f5f5] border-r border-gray-200 z-40
-        transform ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0
-        transition-transform duration-200 ease-in-out flex flex-col`}
+        className={`hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 bg-black text-white z-20 transition-all duration-300 
+        ${isOpen ? "lg:w-60" : "lg:w-16"}`}
       >
         {/* Logo */}
-        <div className="h-16 px-6 flex items-center justify-between">
-          <img src="/assets/Logo.png" alt="Logo" className="h-9 w-auto" />
-          <button className="lg:hidden" onClick={() => setIsOpen(false)}>
-            <IoClose size={22} />
-          </button>
+        <div className="h-16 px-4 flex items-center">
+          <img src="/assets/Logo.png" alt="Logo" className="h-8 w-auto" />
         </div>
-
-        <div className="px-6">
-          <div className="h-px bg-gray-200" />
-        </div>
+        <div className="h-px bg-gray-700 mx-4" />
 
         {/* Menu */}
-        <nav className="flex-1 px-3 py-4">
-          <ul className="space-y-2">
+        <nav className="flex-1 overflow-y-auto px-2 py-4 space-y-2">
+          <ul className="flex flex-col space-y-2">
             {menuItems.map((item) => {
               const active = isMatch(item.path);
               return (
-                <li key={item.label} className="relative pl-2">
+                <li key={item.label} className="relative">
                   {active && (
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 h-7 w-1.5 rounded-full bg-[#856bac]" />
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1.5 rounded-full bg-[#D0EA59]" />
                   )}
-
                   <Link
                     to={item.path}
-                    aria-current={active ? "page" : undefined}
-                    className={`group flex items-center gap-3 px-3 py-2 rounded-xl transition
+                    className={`group flex items-center gap-3 px-3 py-2 rounded-lg transition-colors
                       ${
                         active
-                          ? "bg-white text-gray-900 shadow-sm ring-1 ring-gray-200"
-                          : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                          ? "bg-[#D0EA59] text-black shadow-sm"
+                          : "text-gray-300 hover:bg-[#D0EA59]/20 hover:text-white"
                       }`}
                   >
                     <item.icon
                       className={`w-5 h-5 ${
                         active
-                          ? "text-[#856bac]"
-                          : "text-gray-400 group-hover:text-gray-600"
+                          ? "text-black"
+                          : "text-gray-400 group-hover:text-white"
                       }`}
                     />
-                    <span
-                      className={`text-sm font-medium ${
-                        active ? "text-[#856bac]" : ""
-                      }`}
-                    >
-                      {item.label}
-                    </span>
+                    {isOpen && (
+                      <span className="text-sm font-medium leading-6">
+                        {item.label}
+                      </span>
+                    )}
                   </Link>
                 </li>
               );
@@ -103,54 +197,43 @@ const LeftSidebar = ({ isOpen, setIsOpen }) => {
         </nav>
 
         {/* Footer */}
-        <div className="mt-auto">
-          <div className="px-6">
-            <div className="h-px bg-gray-200" />
-          </div>
-
-          <div className="px-3 py-4 space-y-1">
-            {/* Settings Dropdown */}
-            <button
-              onClick={() => setSettingsOpen(!settingsOpen)}
-              className="flex w-full items-center justify-between px-3 py-2 rounded-lg text-sm font-medium
-                         text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition"
-            >
-              <div className="flex items-center gap-3">
-                <MdSettings className="w-5 h-5 text-gray-400" />
-                <span>Settings</span>
-              </div>
-              {settingsOpen ? (
+        <div className="mt-auto px-2 py-4 space-y-2">
+          <button
+            onClick={() => setSettingsOpen(!settingsOpen)}
+            className="flex w-full items-center justify-between px-3 py-2 rounded-lg text-sm font-medium
+              text-gray-300 hover:bg-[#D0EA59]/20 hover:text-white transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <MdSettings className="w-5 h-5 text-gray-400" />
+              {isOpen && <span>Settings</span>}
+            </div>
+            {isOpen &&
+              (settingsOpen ? (
                 <IoChevronUp className="w-4 h-4" />
               ) : (
                 <IoChevronDown className="w-4 h-4" />
-              )}
-            </button>
+              ))}
+          </button>
 
-            {/* Dropdown Content */}
-            {settingsOpen && (
-              <div className="ml-8 mt-1 space-y-1">
-                <Link
-                  to="/profile"
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium
-                             text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition"
-                >
-                  <MdPerson className="w-5 h-5 text-gray-400" />
-                  Profile
-                </Link>
-              </div>
-            )}
+          {isOpen && settingsOpen && (
+            <div className="ml-6 mt-1 space-y-1">
+              <Link
+                to="/profile"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:bg-[#D0EA59]/20 hover:text-white transition-colors"
+              >
+                <MdPerson className="w-5 h-5 text-gray-400" />
+                Profile
+              </Link>
+            </div>
+          )}
 
-            {/* Logout */}
-            <Link
-              to="/auth/login"
-              onClick={handleLogout}
-              className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium
-                         text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition"
-            >
-              <MdLogout className="w-5 h-5 text-gray-400" />
-              Logout
-            </Link>
-          </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:bg-[#D0EA59]/20 hover:text-white transition-colors w-full"
+          >
+            <MdLogout className="w-5 h-5 text-gray-400" />
+            {isOpen && "Logout"}
+          </button>
         </div>
       </aside>
     </>

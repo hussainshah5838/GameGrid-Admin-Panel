@@ -1,46 +1,13 @@
-import React, { useState, useRef } from "react";
+
+import React, { useState } from "react";
 import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
-/* ---------- Tiny UI kit (DRY) ---------- */
-const Card = ({ className = "", children }) => (
-  <div
-    className={`bg-white rounded-2xl shadow-[0_8px_28px_rgba(0,0,0,0.08)] ${className}`}
-  >
-    {children}
-  </div>
-);
-
-const Label = ({ htmlFor, children }) => (
-  <label
-    htmlFor={htmlFor}
-    className="block text-[13px] font-medium text-gray-700 mb-1.5"
-  >
-    {children}
-  </label>
-);
-
+/* ---------- Input & Button Components ---------- */
 const Input = React.forwardRef(function Input(
-  {
-    id,
-    type = "text",
-    placeholder,
-    value,
-    onChange,
-    left,
-    right,
-    variant = "outline",
-    ...rest
-  },
+  { id, type = "text", placeholder, value, onChange, left, right, ...rest },
   ref
 ) {
-  const base =
-    "w-full h-12 rounded-xl text-[14px] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/70";
-  const style =
-    variant === "filled"
-      ? "bg-gray-100 border border-gray-200 focus:border-transparent"
-      : "bg-white border-2 border-purple-300 focus:border-transparent";
-
   return (
     <div className="relative">
       {left && (
@@ -55,9 +22,9 @@ const Input = React.forwardRef(function Input(
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className={`${base} ${style} ${left ? "pl-9" : "pl-3"} ${
-          right ? "pr-10" : "pr-3"
-        }`}
+        className={`w-full h-12 rounded-xl px-3 ${
+          left ? "pl-9" : ""
+        } ${right ? "pr-10" : ""} text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#D0EA59]/60 focus:border-transparent bg-black text-white border border-gray-700`}
         {...rest}
       />
       {right && (
@@ -75,82 +42,19 @@ const Input = React.forwardRef(function Input(
 
 const Button = ({ children, className = "", ...rest }) => (
   <button
-    className={`h-10 w-full rounded-lg bg-purple-600 text-white text-sm font-medium 
-      shadow-[0_6px_16px_rgba(126,87,194,0.35)] hover:bg-purple-700 active:bg-purple-800 transition ${className}`}
+    className={`h-12 w-full rounded-xl bg-[#D0EA59] text-black font-semibold text-sm hover:brightness-90 active:brightness-95 transition ${className}`}
     {...rest}
   >
     {children}
   </button>
 );
 
-/* ---------- OTP input (6 boxes) ---------- */
-const OtpInput = ({ length = 6, value, onChange }) => {
-  const refs = useRef(Array.from({ length }, () => React.createRef()));
-
-  const handle = (i, e) => {
-    const v = e.target.value.replace(/\D/g, "").slice(-1);
-    const chars = value.split("");
-    chars[i] = v || "";
-    const newVal = chars.join("").slice(0, length);
-    onChange(newVal);
-
-    if (v && i < length - 1) refs.current[i + 1].current?.focus();
-    if (!v && i > 0 && e.nativeEvent.inputType === "deleteContentBackward")
-      refs.current[i - 1].current?.focus();
-  };
-
-  return (
-    <div className="flex items-center gap-2">
-      {Array.from({ length }).map((_, i) => (
-        <input
-          key={i}
-          ref={refs.current[i]}
-          inputMode="numeric"
-          className="w-11 h-11 text-center rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500/70 focus:border-transparent text-sm"
-          value={value[i] ?? ""}
-          onChange={(e) => handle(i, e)}
-          maxLength={1}
-        />
-      ))}
-    </div>
-  );
-};
-
-/* ---------- Right image panel (matches screenshot) ---------- */
-const PromoPanel = () => (
-  <Card className="overflow-hidden rounded-2xl h-72 md:h-[520px]">
-    <div className="relative w-full h-full">
-      {/* If your file is `public/assets/Frame 1 (1).png`, use the encoded path below */}
-      <img
-        src="/assets/Frame%201%20(1).png"
-        alt="Fashion in city"
-        className="absolute inset-0 w-full h-full object-cover"
-      />
-      <div className="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-black/65 via-black/30 to-transparent">
-        <h3 className="text-white font-semibold text-[15px]">
-          Your Exclusive Shopping Store
-        </h3>
-        <p className="mt-1 text-white/80 text-[12px] leading-5 max-w-sm">
-          Lorem ipsum dolor sit amet consectetur. Leo diam tincidunt nec diam
-          justo. At sagittis mi egestas vitae lectus adipiscing.
-        </p>
-      </div>
-    </div>
-  </Card>
-);
-
-/* ---------- Auth screens ---------- */
-const PasswordField = ({
-  show,
-  setShow,
-  id = "password",
-  placeholder = "Password",
-}) => (
+/* ---------- Password Field ---------- */
+const PasswordField = ({ show, setShow, id = "password", placeholder = "Password" }) => (
   <Input
     id={id}
     type={show ? "text" : "password"}
     placeholder={placeholder}
-    variant="filled"
     left={<FiLock className="w-4 h-4 text-gray-400" />}
     right={
       <span
@@ -158,192 +62,650 @@ const PasswordField = ({
         className="cursor-pointer"
         aria-label="Toggle password visibility"
       >
-        {show ? (
-          <FiEyeOff className="w-4 h-4 text-gray-500" />
-        ) : (
-          <FiEye className="w-4 h-4 text-gray-500" />
-        )}
+        {show ? <FiEyeOff className="w-4 h-4 text-gray-300" /> : <FiEye className="w-4 h-4 text-gray-300" />}
       </span>
     }
   />
 );
 
+/* ---------- Login Form ---------- */
 const LoginForm = ({ onForgot }) => {
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    // simple condition for now (both fields non-empty)
-    // remove this block if you want unconditional redirect
     const email = document.getElementById("email")?.value?.trim();
     const pass = document.getElementById("password")?.value?.trim();
     if (!email || !pass) return;
-
-    navigate("/"); // ← redirect
+    navigate("/"); // redirect
   };
 
   return (
-    <Card className="p-10 md:p-12 h-auto md:h-[520px] flex flex-col justify-center font-poppins">
-      <img src="/assets/Logo.png" alt="Logo" className="h-12 w-auto mx-auto" />
+    <div className="relative z-10 text-center">
+      {/* Logo */}
+      <img src="/assets/Logo.png" alt="Logo" className="h-12 w-auto mx-auto mt-2" />
 
-      <h1 className="mt-6 text-center text-2xl md:text-3xl font-semibold text-gray-900">
-        Welcome Back!
-      </h1>
-      <p className="mt-1 text-center text-[14px] text-gray-500">
+      <h1 className="mt-4 text-2xl font-semibold text-white">Welcome Back!</h1>
+      <p className="mt-1 text-sm text-white/80">
         Enter your credentials to login
       </p>
 
-      <div className="mt-8 space-y-4">
-        <div>
-          {/* Purple outline like the mock */}
-          <Input
-            id="email"
-            placeholder="Email"
-            variant="outline"
-            left={<FiMail className="w-4 h-4 text-gray-400" />}
-          />
-        </div>
-
-        <div>
-          <PasswordField show={show} setShow={setShow} />
-        </div>
+      <div className="mt-6 space-y-4 text-left">
+        <Input
+          id="email"
+          placeholder="Email"
+          left={<FiMail className="w-4 h-4 text-white/80" />}
+        />
+        <PasswordField show={show} setShow={setShow} />
 
         <div className="text-right">
           <button
             type="button"
             onClick={onForgot}
-            className="text-[13px] font-medium text-purple-600 hover:text-purple-700"
+            className="text-[13px] font-medium text-[#D0EA59] hover:brightness-90 transition"
           >
             Forgot Password
           </button>
         </div>
 
-        <button
-          onClick={handleLogin}
-          className="mt-2 h-12 w-full rounded-xl bg-purple-600 text-white text-base font-semibold
-                     shadow-[0_6px_16px_rgba(126,87,194,0.35)] hover:bg-purple-700 active:bg-purple-800 transition"
-        >
-          Login
-        </button>
+        <Button onClick={handleLogin}>Login</Button>
       </div>
-    </Card>
+    </div>
   );
 };
 
-const ForgotFlow = ({ onBack }) => {
-  const [step, setStep] = useState(1);
-  const [otp, setOtp] = useState("");
-  const [show1, setShow1] = useState(false);
-  const [show2, setShow2] = useState(false);
-
-  return (
-    <Card className="p-8 md:p-10 h-auto md:h-[520px]">
-      <img src="/assets/Logo.png" alt="Logo" className="h-10 w-auto" />
-
-      <h1 className="mt-6 text-xl font-semibold text-gray-900">
-        {step < 3 ? "Forgot Password?" : "Reset Password"}
-      </h1>
-      <p className="mt-1 text-[13px] text-gray-500">
-        {step === 1 && "Provide your email to receive a reset code."}
-        {step === 2 && "Provide the verification code we sent to your email."}
-        {step === 3 && "Enter and confirm your new password."}
-      </p>
-
-      {step === 1 && (
-        <div className="mt-6 space-y-5">
-          <div>
-            <Label htmlFor="fp-email">Email</Label>
-            <Input
-              id="fp-email"
-              placeholder="example@email.com"
-              left={<FiMail className="w-4 h-4 text-gray-400" />}
-            />
-          </div>
-          <Button onClick={() => setStep(2)}>Send Code</Button>
-          <button
-            onClick={onBack}
-            className="block text-center text-[12px] text-gray-500 hover:underline"
-          >
-            Back to Login
-          </button>
-        </div>
-      )}
-
-      {step === 2 && (
-        <div className="mt-6 space-y-5">
-          <div>
-            <Label>Code</Label>
-            <OtpInput value={otp.padEnd(6)} onChange={setOtp} />
-          </div>
-          <Button onClick={() => setStep(3)}>Verify Code</Button>
-          <button
-            onClick={onBack}
-            className="block text-center text-[12px] text-gray-500 hover:underline"
-          >
-            Back to Login
-          </button>
-        </div>
-      )}
-
-      {step === 3 && (
-        <div className="mt-6 space-y-5">
-          <div>
-            <Label htmlFor="new-pass">New Password</Label>
-            <PasswordField
-              id="new-pass"
-              show={show1}
-              setShow={setShow1}
-              placeholder="New password"
-            />
-          </div>
-          <div>
-            <Label htmlFor="confirm-pass">Confirm Password</Label>
-            <PasswordField
-              id="confirm-pass"
-              show={show2}
-              setShow={setShow2}
-              placeholder="Confirm password"
-            />
-          </div>
-          <Button>Reset Password</Button>
-          <button
-            onClick={onBack}
-            className="block text-center text-[12px] text-gray-500 hover:underline"
-          >
-            Back to Login
-          </button>
-        </div>
-      )}
-    </Card>
-  );
-};
-
-/* ---------- Page shell ---------- */
-const Shell = ({ children, rightPanel = true }) => (
-  <div className="min-h-screen bg-gray-100 px-3 sm:px-4 md:px-6 py-16 md:py-10">
-    <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 items-stretch">
-      <div className="order-2 md:order-1">{children}</div>
-      {rightPanel && (
-        <div className="order-1 md:order-2">
-          <PromoPanel />
-        </div>
-      )}
+/* ---------- Right Promo Panel ---------- */
+const PromoPanel = () => (
+  <div className="hidden md:block w-1/2 h-screen">
+    <div className="relative w-full h-full">
+      <img
+        src="/assets/Frame%201%20(1).png"
+        alt="Promo"
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+      <div className="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-black/65 via-black/30 to-transparent">
+        <h3 className="text-white font-semibold text-[15px]">
+          Smarter Betting Starts Here
+        </h3>
+        <p className="mt-1 text-white/80 text-[12px] leading-5 max-w-sm">
+          Analyze games, spot trends, and get AI-powered predictions designed for serious sports bettors.
+        </p>
+      </div>
     </div>
   </div>
 );
 
-/* ---------- Exported page ---------- */
+/* ---------- Page Shell ---------- */
+const Shell = ({ children }) => (
+  <div className="min-h-screen flex">
+    {/* Left Section */}
+    <div className="relative w-full md:w-1/2 flex flex-col items-center justify-start px-6 py-8 overflow-hidden">
+      {/* Background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black via-[#1a1a1a] to-[#0d0d0d]" />
+
+      {/* Bot logo slightly above */}
+      <img
+        src="/assets/Layer_1.png"
+        alt="GameGrid Bot"
+        className="w-32 h-32 opacity-70 mt-6"
+      />
+
+      {/* Login form container just below */}
+      <div className="relative w-full max-w-md mt-6">{children}</div>
+    </div>
+
+    {/* Right section */}
+    <PromoPanel />
+  </div>
+);
+
+/* ---------- Exported Page ---------- */
 const Login = () => {
-  const [mode, setMode] = useState("login"); // login | forgot
+  const [mode, setMode] = useState("login");
   return (
     <Shell>
       {mode === "login" ? (
         <LoginForm onForgot={() => setMode("forgot")} />
       ) : (
-        <ForgotFlow onBack={() => setMode("login")} />
+        <div className="text-white text-center mt-20">
+          Forgot password flow goes here.
+        </div>
       )}
     </Shell>
   );
 };
 
 export default Login;
+
+
+// import React, { useState, useRef } from "react";
+// import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
+// import { useNavigate } from "react-router-dom";
+
+// /* ---------- Input & Button Components ---------- */
+// const Input = React.forwardRef(function Input(
+//   { id, type = "text", placeholder, value, onChange, left, right, ...rest },
+//   ref
+// ) {
+//   return (
+//     <div className="relative">
+//       {left && (
+//         <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+//           {left}
+//         </div>
+//       )}
+//       <input
+//         id={id}
+//         ref={ref}
+//         type={type}
+//         value={value}
+//         onChange={onChange}
+//         placeholder={placeholder}
+//         className={`w-full h-12 rounded-xl px-3 ${
+//           left ? "pl-9" : ""
+//         } ${right ? "pr-10" : ""} text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#D0EA59]/60 focus:border-transparent bg-black text-white border border-gray-700`}
+//         {...rest}
+//       />
+//       {right && (
+//         <button
+//           type="button"
+//           tabIndex={-1}
+//           className="absolute inset-y-0 right-0 px-3 grid place-items-center"
+//         >
+//           {right}
+//         </button>
+//       )}
+//     </div>
+//   );
+// });
+
+// const Button = ({ children, className = "", ...rest }) => (
+//   <button
+//     className={`h-12 w-full rounded-xl bg-[#D0EA59] text-black font-semibold text-sm hover:brightness-90 active:brightness-95 transition ${className}`}
+//     {...rest}
+//   >
+//     {children}
+//   </button>
+// );
+
+// /* ---------- Password Field ---------- */
+// const PasswordField = ({ show, setShow, id = "password", placeholder = "Password" }) => (
+//   <Input
+//     id={id}
+//     type={show ? "text" : "password"}
+//     placeholder={placeholder}
+//     left={<FiLock className="w-4 h-4 text-gray-400" />}
+//     right={
+//       <span
+//         onClick={() => setShow((s) => !s)}
+//         className="cursor-pointer"
+//         aria-label="Toggle password visibility"
+//       >
+//         {show ? <FiEyeOff className="w-4 h-4 text-gray-300" /> : <FiEye className="w-4 h-4 text-gray-300" />}
+//       </span>
+//     }
+//   />
+// );
+
+// /* ---------- Login Form ---------- */
+// const LoginForm = ({ onForgot }) => {
+//   const [show, setShow] = useState(false);
+//   const navigate = useNavigate();
+
+//   const handleLogin = () => {
+//     const email = document.getElementById("email")?.value?.trim();
+//     const pass = document.getElementById("password")?.value?.trim();
+//     if (!email || !pass) return;
+//     navigate("/"); // redirect
+//   };
+
+//   return (
+//     <div className="relative z-10">
+//       {/* Logo */}
+//       <img src="/assets/Logo.png" alt="Logo" className="h-12 w-auto mx-auto mt-4" />
+//       <h1 className="mt-4 text-center text-2xl font-semibold text-white">Welcome Back!</h1>
+//       <p className="mt-1 text-center text-sm text-white/80">
+//         Enter your credentials to login
+//       </p>
+
+//       <div className="mt-6 space-y-4">
+//         <Input
+//           id="email"
+//           placeholder="Email"
+//           left={<FiMail className="w-4 h-4 text-white/80" />}
+//         />
+//         <PasswordField show={show} setShow={setShow} />
+//         <div className="text-right">
+//           <button
+//             type="button"
+//             onClick={onForgot}
+//             className="text-[13px] font-medium text-[#D0EA59] hover:brightness-90 transition"
+//           >
+//             Forgot Password
+//           </button>
+//         </div>
+//         <Button onClick={handleLogin}>Login</Button>
+//       </div>
+//     </div>
+//   );
+// };
+
+// /* ---------- Right Promo Panel ---------- */
+// const PromoPanel = () => (
+//   <div className="hidden md:block w-1/2 h-screen">
+//     <div className="relative w-full h-full">
+//       <img
+//         src="/assets/Frame%201%20(1).png"
+//         alt="Promo"
+//         className="absolute inset-0 w-full h-full object-cover"
+//       />
+//       <div className="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-black/65 via-black/30 to-transparent">
+//         <h3 className="text-white font-semibold text-[15px]">
+//           Smarter Betting Starts Here
+//         </h3>
+//         <p className="mt-1 text-white/80 text-[12px] leading-5 max-w-sm">
+//           Analyze games, spot trends, and get AI-powered predictions designed for serious sports bettors.
+//         </p>
+//       </div>
+//     </div>
+//   </div>
+// );
+
+// /* ---------- Page Shell ---------- */
+// const Shell = ({ children }) => (
+//   <div className="min-h-screen flex">
+//     {/* Left Section */}
+//     <div className="relative w-full md:w-1/2 flex justify-center overflow-hidden">
+//       {/* Background gradient */}
+//       <div className="absolute inset-0 bg-gradient-to-b from-black via-[#1a1a1a] to-[#0d0d0d]" />
+
+//       {/* Bot above logo */}
+//       <div className="absolute inset-x-0 top-16 flex justify-center">
+//         <img
+//           src="/assets/Layer_1.png"
+//           alt="GameGrid Bot"
+//           className="w-36 h-36 opacity-70"
+//         />
+//       </div>
+
+//       {/* Login form container pushed below bot */}
+//       <div className="relative w-full max-w-md px-6 z-10 mt-64">{children}</div>
+//     </div>
+
+//     {/* Right section */}
+//     <PromoPanel />
+//   </div>
+// );
+
+// /* ---------- Exported Page ---------- */
+// const Login = () => {
+//   const [mode, setMode] = useState("login");
+//   return (
+//     <Shell>
+//       {mode === "login" ? (
+//         <LoginForm onForgot={() => setMode("forgot")} />
+//       ) : (
+//         <div className="text-white text-center mt-20">
+//           Forgot password flow goes here.
+//         </div>
+//       )}
+//     </Shell>
+//   );
+// };
+
+// export default Login;
+
+
+
+
+
+
+
+// import React, { useState, useRef } from "react";
+// import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
+// import { useNavigate } from "react-router-dom";
+
+// /* ---------- Tiny UI kit (DRY) ---------- */
+// const Card = ({ className = "", children }) => (
+//   <div
+//     className={`bg-white rounded-2xl shadow-[0_8px_28px_rgba(0,0,0,0.08)] ${className}`}
+//   >
+//     {children}
+//   </div>
+// );
+
+// const Label = ({ htmlFor, children }) => (
+//   <label
+//     htmlFor={htmlFor}
+//     className="block text-[13px] font-medium text-gray-700 mb-1.5"
+//   >
+//     {children}
+//   </label>
+// );
+
+// const Input = React.forwardRef(function Input(
+//   {
+//     id,
+//     type = "text",
+//     placeholder,
+//     value,
+//     onChange,
+//     left,
+//     right,
+//     variant = "outline",
+//     ...rest
+//   },
+//   ref
+// ) {
+//   const base =
+//     "w-full h-12 rounded-xl text-[14px] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/70";
+//   const style =
+//     variant === "filled"
+//       ? "bg-gray-100 border border-gray-200 focus:border-transparent"
+//       : "bg-white border-2 border-purple-300 focus:border-transparent";
+
+//   return (
+//     <div className="relative">
+//       {left && (
+//         <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+//           {left}
+//         </div>
+//       )}
+//       <input
+//         id={id}
+//         ref={ref}
+//         type={type}
+//         value={value}
+//         onChange={onChange}
+//         placeholder={placeholder}
+//         className={`${base} ${style} ${left ? "pl-9" : "pl-3"} ${
+//           right ? "pr-10" : "pr-3"
+//         }`}
+//         {...rest}
+//       />
+//       {right && (
+//         <button
+//           type="button"
+//           tabIndex={-1}
+//           className="absolute inset-y-0 right-0 px-3 grid place-items-center"
+//         >
+//           {right}
+//         </button>
+//       )}
+//     </div>
+//   );
+// });
+
+// const Button = ({ children, className = "", ...rest }) => (
+//   <button
+//     className={`h-10 w-full rounded-lg bg-purple-600 text-white text-sm font-medium 
+//       shadow-[0_6px_16px_rgba(126,87,194,0.35)] hover:bg-purple-700 active:bg-purple-800 transition ${className}`}
+//     {...rest}
+//   >
+//     {children}
+//   </button>
+// );
+
+// /* ---------- OTP input (6 boxes) ---------- */
+// const OtpInput = ({ length = 6, value, onChange }) => {
+//   const refs = useRef(Array.from({ length }, () => React.createRef()));
+
+//   const handle = (i, e) => {
+//     const v = e.target.value.replace(/\D/g, "").slice(-1);
+//     const chars = value.split("");
+//     chars[i] = v || "";
+//     const newVal = chars.join("").slice(0, length);
+//     onChange(newVal);
+
+//     if (v && i < length - 1) refs.current[i + 1].current?.focus();
+//     if (!v && i > 0 && e.nativeEvent.inputType === "deleteContentBackward")
+//       refs.current[i - 1].current?.focus();
+//   };
+
+//   return (
+//     <div className="flex items-center gap-2">
+//       {Array.from({ length }).map((_, i) => (
+//         <input
+//           key={i}
+//           ref={refs.current[i]}
+//           inputMode="numeric"
+//           className="w-11 h-11 text-center rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500/70 focus:border-transparent text-sm"
+//           value={value[i] ?? ""}
+//           onChange={(e) => handle(i, e)}
+//           maxLength={1}
+//         />
+//       ))}
+//     </div>
+//   );
+// };
+
+// /* ---------- Right image panel (matches screenshot) ---------- */
+// const PromoPanel = () => (
+//   <Card className="overflow-hidden rounded-2xl h-72 md:h-[520px]">
+//     <div className="relative w-full h-full">
+//       {/* If your file is `public/assets/Frame 1 (1).png`, use the encoded path below */}
+//       <img
+//         src="/assets/Frame%201%20(1).png"
+//         alt="Fashion in city"
+//         className="absolute inset-0 w-full h-full object-cover"
+//       />
+//       <div className="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-black/65 via-black/30 to-transparent">
+//         <h3 className="text-white font-semibold text-[15px]">
+//           Smarter Betting Starts Here
+//         </h3>
+//         <p className="mt-1 text-white/80 text-[12px] leading-5 max-w-sm">
+//           Analyze games, spot trends, and get AI-powered predictions designed for serious sports bettors.
+//         </p>
+//       </div>
+//     </div>
+//   </Card>
+// );
+
+// /* ---------- Auth screens ---------- */
+// const PasswordField = ({
+//   show,
+//   setShow,
+//   id = "password",
+//   placeholder = "Password",
+// }) => (
+//   <Input
+//     id={id}
+//     type={show ? "text" : "password"}
+//     placeholder={placeholder}
+//     variant="filled"
+//     left={<FiLock className="w-4 h-4 text-gray-400" />}
+//     right={
+//       <span
+//         onClick={() => setShow((s) => !s)}
+//         className="cursor-pointer"
+//         aria-label="Toggle password visibility"
+//       >
+//         {show ? (
+//           <FiEyeOff className="w-4 h-4 text-gray-500" />
+//         ) : (
+//           <FiEye className="w-4 h-4 text-gray-500" />
+//         )}
+//       </span>
+//     }
+//   />
+// );
+
+// const LoginForm = ({ onForgot }) => {
+//   const [show, setShow] = useState(false);
+//   const navigate = useNavigate();
+
+//   const handleLogin = () => {
+//     // simple condition for now (both fields non-empty)
+//     // remove this block if you want unconditional redirect
+//     const email = document.getElementById("email")?.value?.trim();
+//     const pass = document.getElementById("password")?.value?.trim();
+//     if (!email || !pass) return;
+
+//     navigate("/"); // ← redirect
+//   };
+
+//   return (
+//     <Card className="p-10 md:p-12 h-auto md:h-[520px] flex flex-col justify-center font-poppins">
+//       <img src="/assets/Logo.png" alt="Logo" className="h-12 w-auto mx-auto" />
+
+//       <h1 className="mt-6 text-center text-2xl md:text-3xl font-semibold text-gray-900">
+//         Welcome Back!
+//       </h1>
+//       <p className="mt-1 text-center text-[14px] text-gray-500">
+//         Enter your credentials to login
+//       </p>
+
+//       <div className="mt-8 space-y-4">
+//         <div>
+//           {/* Purple outline like the mock */}
+//           <Input
+//             id="email"
+//             placeholder="Email"
+//             variant="outline"
+//             left={<FiMail className="w-4 h-4 text-gray-400" />}
+//           />
+//         </div>
+
+//         <div>
+//           <PasswordField show={show} setShow={setShow} />
+//         </div>
+
+//         <div className="text-right">
+//           <button
+//             type="button"
+//             onClick={onForgot}
+//             className="text-[13px] font-medium text-purple-600 hover:text-purple-700"
+//           >
+//             Forgot Password
+//           </button>
+//         </div>
+
+//         <button
+//           onClick={handleLogin}
+//           className="mt-2 h-12 w-full rounded-xl bg-purple-600 text-white text-base font-semibold
+//                      shadow-[0_6px_16px_rgba(126,87,194,0.35)] hover:bg-purple-700 active:bg-purple-800 transition"
+//         >
+//           Login
+//         </button>
+//       </div>
+//     </Card>
+//   );
+// };
+
+// const ForgotFlow = ({ onBack }) => {
+//   const [step, setStep] = useState(1);
+//   const [otp, setOtp] = useState("");
+//   const [show1, setShow1] = useState(false);
+//   const [show2, setShow2] = useState(false);
+
+//   return (
+//     <Card className="p-8 md:p-10 h-auto md:h-[520px]">
+//       <img src="/assets/Logo.png" alt="Logo" className="h-10 w-auto" />
+
+//       <h1 className="mt-6 text-xl font-semibold text-gray-900">
+//         {step < 3 ? "Forgot Password?" : "Reset Password"}
+//       </h1>
+//       <p className="mt-1 text-[13px] text-gray-500">
+//         {step === 1 && "Provide your email to receive a reset code."}
+//         {step === 2 && "Provide the verification code we sent to your email."}
+//         {step === 3 && "Enter and confirm your new password."}
+//       </p>
+
+//       {step === 1 && (
+//         <div className="mt-6 space-y-5">
+//           <div>
+//             <Label htmlFor="fp-email">Email</Label>
+//             <Input
+//               id="fp-email"
+//               placeholder="example@email.com"
+//               left={<FiMail className="w-4 h-4 text-gray-400" />}
+//             />
+//           </div>
+//           <Button onClick={() => setStep(2)}>Send Code</Button>
+//           <button
+//             onClick={onBack}
+//             className="block text-center text-[12px] text-gray-500 hover:underline"
+//           >
+//             Back to Login
+//           </button>
+//         </div>
+//       )}
+
+//       {step === 2 && (
+//         <div className="mt-6 space-y-5">
+//           <div>
+//             <Label>Code</Label>
+//             <OtpInput value={otp.padEnd(6)} onChange={setOtp} />
+//           </div>
+//           <Button onClick={() => setStep(3)}>Verify Code</Button>
+//           <button
+//             onClick={onBack}
+//             className="block text-center text-[12px] text-gray-500 hover:underline"
+//           >
+//             Back to Login
+//           </button>
+//         </div>
+//       )}
+
+//       {step === 3 && (
+//         <div className="mt-6 space-y-5">
+//           <div>
+//             <Label htmlFor="new-pass">New Password</Label>
+//             <PasswordField
+//               id="new-pass"
+//               show={show1}
+//               setShow={setShow1}
+//               placeholder="New password"
+//             />
+//           </div>
+//           <div>
+//             <Label htmlFor="confirm-pass">Confirm Password</Label>
+//             <PasswordField
+//               id="confirm-pass"
+//               show={show2}
+//               setShow={setShow2}
+//               placeholder="Confirm password"
+//             />
+//           </div>
+//           <Button>Reset Password</Button>
+//           <button
+//             onClick={onBack}
+//             className="block text-center text-[12px] text-gray-500 hover:underline"
+//           >
+//             Back to Login
+//           </button>
+//         </div>
+//       )}
+//     </Card>
+//   );
+// };
+
+// /* ---------- Page shell ---------- */
+// const Shell = ({ children, rightPanel = true }) => (
+//   <div className="min-h-screen bg-gray-100 px-3 sm:px-4 md:px-6 py-16 md:py-10">
+//     <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 items-stretch">
+//       <div className="order-2 md:order-1">{children}</div>
+//       {rightPanel && (
+//         <div className="order-1 md:order-2">
+//           <PromoPanel />
+//         </div>
+//       )}
+//     </div>
+//   </div>
+// );
+
+// /* ---------- Exported page ---------- */
+// const Login = () => {
+//   const [mode, setMode] = useState("login"); // login | forgot
+//   return (
+//     <Shell>
+//       {mode === "login" ? (
+//         <LoginForm onForgot={() => setMode("forgot")} />
+//       ) : (
+//         <ForgotFlow onBack={() => setMode("login")} />
+//       )}
+//     </Shell>
+//   );
+// };
+
+// export default Login;

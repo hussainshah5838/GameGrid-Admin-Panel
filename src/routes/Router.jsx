@@ -1,17 +1,19 @@
+
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import React from "react";
 // Layouts
 import DashboardLayout from "../layouts/SiteLayout";
 
 // Pages
-import DashboardContent from "../Pages/MainDashboard";
+import DashboardPage from "../Pages/MainDashboard";
+import TicketsPage from "../Pages/TicketsPage";
+import TrendsPage from "../Pages/TrendsPage";
 import UsersPage from "../Pages/UsersPage";
-import Stores from "../Pages/Stores";
-import ShipmentsPage from "../Pages/ShipmentsPage";
 import PaymentsPage from "../Pages/PaymentPage";
 import LoginPage from "../Pages/Auth/Login";
 import ProfilePage from "../Pages/ProfilePage";
 import MessagesPage from "../Pages/MessagesPage";
+import NotificationsPage from "../Pages/NotificationsPage"; 
 
 const Router = createBrowserRouter([
   {
@@ -20,26 +22,36 @@ const Router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <DashboardContent />,
+        element: <DashboardPage />,
       },
       {
         path: "users",
         element: <UsersPage />,
       },
       {
-        path: "store",
-        element: <Stores />,
+        path: "tickets",
+        element: <TicketsPage />,
       },
       {
-        path: "shipments",
-        element: <ShipmentsPage />,
+        path: "trends",
+        element: <TrendsPage />,
       },
       {
         path: "payments",
         element: <PaymentsPage />,
       },
-      { path: "profile/*", element: <ProfilePage /> },
-      { path: "messages/*", element: <MessagesPage /> },
+      {
+        path: "profile/*",
+        element: <ProfilePage />,
+      },
+      {
+        path: "messages/*",
+        element: <MessagesPage />,
+      },
+      {
+        path: "notifications",          // ⬅️ add this
+        element: <NotificationsPage />, // ⬅️ now route works
+      },
     ],
   },
   {
