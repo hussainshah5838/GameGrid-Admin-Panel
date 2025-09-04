@@ -10,6 +10,7 @@ import {
   MdLogout,
   MdPerson,
   MdMessage,
+  MdOutlineFeedback,
 } from "react-icons/md";
 import { IoClose, IoChevronDown, IoChevronUp } from "react-icons/io5";
 
@@ -19,6 +20,7 @@ const menuItems = [
   { icon: MdPayment, label: "Payments", path: "/payments" },
   { icon: MdOutlineAirplaneTicket, label: "Tickets", path: "/tickets" },
   { icon: MdTrendingUp, label: "Trends", path: "/trends" },
+  { icon: MdOutlineFeedback, label: "Feedback", path: "/feedback" },
   { icon: MdMessage, label: "Messages", path: "/messages/*" },
 ];
 

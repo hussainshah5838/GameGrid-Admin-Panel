@@ -1,4 +1,3 @@
-
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import React from "react";
 // Layouts
@@ -13,7 +12,8 @@ import PaymentsPage from "../Pages/PaymentPage";
 import LoginPage from "../Pages/Auth/Login";
 import ProfilePage from "../Pages/ProfilePage";
 import MessagesPage from "../Pages/MessagesPage";
-import NotificationsPage from "../Pages/NotificationsPage"; 
+import NotificationsPage from "../Pages/NotificationsPage";
+import FeedbackPage from "../Pages/FeedbackPage"
 
 const Router = createBrowserRouter([
   {
@@ -45,12 +45,16 @@ const Router = createBrowserRouter([
         element: <ProfilePage />,
       },
       {
+        path: "feedback",
+        element: <FeedbackPage />,
+      },
+      {
         path: "messages/*",
         element: <MessagesPage />,
       },
       {
-        path: "notifications",         
-        element: <NotificationsPage />, 
+        path: "notifications",
+        element: <NotificationsPage />,
       },
     ],
   },
