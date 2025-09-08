@@ -13,7 +13,8 @@ import LoginPage from "../Pages/Auth/Login";
 import ProfilePage from "../Pages/ProfilePage";
 import MessagesPage from "../Pages/MessagesPage";
 import NotificationsPage from "../Pages/NotificationsPage";
-import FeedbackPage from "../Pages/FeedbackPage"
+import FeedbackPage from "../Pages/FeedbackPage";
+import UserProfilePage from "../Components/users/UserProfilePage";
 
 const Router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const Router = createBrowserRouter([
       {
         path: "users",
         element: <UsersPage />,
+      },
+      {
+        path: "users/:userId",
+        element: <UserProfilePage />,
       },
       {
         path: "tickets",
