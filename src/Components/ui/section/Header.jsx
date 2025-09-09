@@ -73,7 +73,7 @@ const Header = ({ isLeftOpen, onMenuClick, isRightOpen, onRightMenuClick }) => {
             </kbd>
           </div>
 
-          {/* Notifications */}
+          {/* Notifications
           <button
             className="p-1.5 md:p-2 rounded-lg hover:bg-[#1E1E1E] 
                        focus:outline-none focus:ring-2 focus:ring-[#D0EA59]"
@@ -81,7 +81,7 @@ const Header = ({ isLeftOpen, onMenuClick, isRightOpen, onRightMenuClick }) => {
             aria-label="Notifications"
           >
             <MdNotificationsNone size={18} className="text-white" />
-          </button>
+          </button> */}
 
           {/* Right Sidebar Toggle */}
           {/* <button

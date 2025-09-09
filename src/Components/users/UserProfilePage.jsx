@@ -224,7 +224,7 @@ export default function UserProfilePage() {
 
             <div className="flex items-center gap-4">
               <div className="relative">
-                <UserCell avatar={user.avatar} name={user.name} />
+                <UserCell avatar={user.avatar} />
                 {user.status === "Active" && (
                   <div className="absolute -top-1 -right-1 h-4 w-4 bg-emerald-500 rounded-full border-2 border-[rgb(12,15,20)] flex items-center justify-center">
                     <MdVerified size={10} className="text-white" />

@@ -11,6 +11,7 @@ import {
   MdPerson,
   MdMessage,
   MdOutlineFeedback,
+  MdNotificationsNone,
 } from "react-icons/md";
 import { IoClose, IoChevronDown, IoChevronUp } from "react-icons/io5";
 
@@ -22,6 +23,7 @@ const menuItems = [
   { icon: MdTrendingUp, label: "Trends", path: "/trends" },
   { icon: MdOutlineFeedback, label: "Feedback", path: "/feedback" },
   { icon: MdMessage, label: "Messages", path: "/messages/*" },
+  { icon: MdNotificationsNone, label: "Announcement", path: "/notifications" },
 ];
 
 const LeftSidebar = ({ isOpen, setIsOpen }) => {

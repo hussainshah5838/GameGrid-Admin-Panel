@@ -14,7 +14,7 @@ export default function NotificationsPage() {
 
   return (
     <div className="p-6 text-white">
-      <h1 className="text-2xl font-bold mb-4">Notifications</h1>
+      <h1 className="text-2xl font-bold mb-4">Announcement</h1>
 
       <div className="rounded-2xl bg-[#0C0F14] ring-1 ring-white/10 shadow-md p-6">
         <NotificationForm users={rowsData} onSubmit={handleSubmit} />
