@@ -47,10 +47,6 @@ const METRICS = {
     { key: "mrr", label: "MRR", unit: "currency" },
     { key: "ltv", label: "LTV", unit: "currency" },
   ],
-  Users: [
-    { key: "premiumUsers", label: "Premium Users", unit: "count" },
-    { key: "newPremium",   label: "New Premium Users", unit: "count" },
-  ],
   Rates: [
     { key: "conversion", label: "Conversion Rate", unit: "percent" },
     { key: "churn",      label: "Churn Rate",      unit: "percent" },
