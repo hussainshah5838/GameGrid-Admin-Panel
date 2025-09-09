@@ -3,6 +3,7 @@ import StatsOverview from "../Components/dashboard/StatsOverview";
 import MarketTrendsStats from "../Components/dashboard/MarketTrendsStats";
 import TrendListTable from "../Components/userlist/TrendListTable";
 import TrendsExplorer from "../Components/dashboard/TrendsExplorer";
+import RevenueInsights from "../Components/dashboard/RevenueInsights";
 import PaymentListTable from "../Components/Payments/PaymentsTable";
 import {
   LineChart,
@@ -120,63 +121,16 @@ const DashboardPage = () => {
         <TrendsExplorer />
 
         {/* Revenue Bar Chart */}
-        <div className="bg-[#0C0F14] rounded-2xl ring-1 ring-white/10 p-4 shadow-md hover:ring-white/15 transition">
-          <h2 className="text-lg font-semibold mb-4 text-white">
-            Monthly Revenue
-          </h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart
-              data={revenueData}
-              margin={{ top: 6, right: 12, left: 0, bottom: 0 }}
-            >
-              <defs>
-                <linearGradient id="revBars" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#D0EA59" stopOpacity="0.9" />
-                  <stop offset="100%" stopColor="#D0EA59" stopOpacity="0.25" />
-                </linearGradient>
-              </defs>
-
-              <CartesianGrid stroke="rgba(255,255,255,0.06)" vertical={false} />
-              <XAxis
-                dataKey="month"
-                tick={{ fill: "#9CA3AF", fontSize: 12 }}
-                axisLine={false}
-                tickLine={false}
-                tickMargin={8}
-              />
-              <YAxis
-                tick={{ fill: "#9CA3AF", fontSize: 12 }}
-                axisLine={false}
-                tickLine={false}
-                width={48}
-                tickMargin={8}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#0C0F14",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  borderRadius: 12,
-                  color: "#fff",
-                }}
-                labelStyle={{ color: "#CBD5E1" }}
-              />
-              <Bar
-                dataKey="revenue"
-                fill="url(#revBars)"
-                radius={[8, 8, 4, 4]}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        <RevenueInsights />
       </div>
 
-      {/* Payments Section */}
+      {/* Payments Section
       <div className="bg-[#111] rounded-2xl ring-1 ring-gray-800 p-4 shadow-card shadow-xl">
         <h2 className="text-lg font-semibold mb-4 text-white">
           Latest Payments
         </h2>
         <PaymentListTable />
-      </div>
+      </div> */}
 
       {/* Trends Table Full */}
       <div className="bg-[#111] rounded-2xl ring-1 ring-gray-800 p-4 shadow-card shadow-xl">
